@@ -5,6 +5,39 @@
  * ElasticSearch version 2.2
  * Kibana version 4.4
 
+### Installation
+
+To install this plugin to your Kibana instance, you can use the following commands:
+
+```bash
+git clone https://github.com/datavis-tech/kibana-chord.git
+zip -r --exclude=*.git* kibana-chord.zip kibana-chord
+kibana plugin --install kibana-chord -u file://`pwd`/kibana-chord.zip
+```
+
+To update to a newer version of this plugin:
+
+```bash
+kibana plugin --remove kibana-chord
+cd kibana-chord
+git pull
+cd ..
+zip -r --exclude=*.git* kibana-chord.zip kibana-chord
+kibana plugin --install kibana-chord -u file://`pwd`/kibana-chord.zip
+```
+
+### Usage
+
+Once installed, you should see an option to open this plugin that looks like this.
+
+![image](https://cloud.githubusercontent.com/assets/68416/16712519/5ae8c850-46a7-11e6-93e6-2b57588bbc15.png)
+
+Once you open the plugin, you can change the text of the greeting.
+
+![image](https://cloud.githubusercontent.com/assets/68416/16712525/7b1a5f58-46a7-11e6-9fe3-068b514bc15a.png)
+
+![image](https://cloud.githubusercontent.com/assets/68416/16712528/8a604018-46a7-11e6-9f49-f0f6298a56d5.png)
+
 ### Related Resources
 
  * [Official Documentation - Kibana Plugins Documentation for v4.4](https://www.elastic.co/guide/en/kibana/4.4/kibana-plugins.html)
