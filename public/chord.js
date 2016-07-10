@@ -2,7 +2,7 @@ define(function(require) {
   var module = require("ui/modules").get("kibana-chord");
 
   module.controller("ChordController", function($scope) {
-    $scope.foo = "Hello Kibana!";
+    $scope.greeting = "Hello";
   });
 
   function ChordProvider(Private) {
@@ -17,6 +17,9 @@ define(function(require) {
       template: require("plugins/kibana-chord/chord.html"),
       params: {
         editor: require("plugins/kibana-chord/chord-editor.html")
+        defaults: {
+          textContent: "Kibana!"
+        }
       }
     });
   }
