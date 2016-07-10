@@ -16,7 +16,7 @@ define(function(require) {
       requiresSearch: false,
       template: require("plugins/kibana-chord/chord.html"),
       params: {
-        editor: require("plugins/kibana-chord/chord-editor.html")
+        editor: require("plugins/kibana-chord/chord-editor.html"),
         defaults: {
           textContent: "Kibana!"
         }
