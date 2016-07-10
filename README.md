@@ -28,6 +28,8 @@ kibana plugin --install kibana-chord -u file://`pwd`/kibana-chord.zip
 
 ### Usage
 
+**Note** Currently, this is only a skeleton of a plugin that shows a configurable greeting.
+
 Once installed, you should see an option to open this plugin that looks like this.
 
 ![image](https://cloud.githubusercontent.com/assets/68416/16712519/5ae8c850-46a7-11e6-93e6-2b57588bbc15.png)
