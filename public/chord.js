@@ -13,7 +13,7 @@ define(function(require) {
       title: "Chord Diagram",
       icon: "fa-pie-chart", // TODO make this look like a chord diagram
       description: "Visualize network flows with a Chord Diagram.",
-      requiresSearch: false,
+      requiresSearch: true,
       template: require("plugins/kibana-chord/chord.html"),
       params: {
         editor: require("plugins/kibana-chord/chord-editor.html"),
