@@ -20,7 +20,33 @@ define(function(require) {
         defaults: {
           textContent: "Kibana!"
         }
-      }
+      },
+      schemas: new Schemas([
+        {
+          group: "metrics",
+          name: "weight",
+          title: "Chord Weight",
+          min: 1,
+          max: 1,
+          aggFilter: ["count", "sum"]
+        },
+        {
+          group: "buckets",
+          name: "src",
+          title: "Chord Sources",
+          min: 1,
+          max: 1,
+          aggFilter: "terms"
+        },
+        {
+          group: "buckets",
+          name: "dest",
+          title: "Chord Destinations",
+          min: 1,
+          max: 1,
+          aggFilter: "terms"
+        }
+      ])
     });
   }
 
