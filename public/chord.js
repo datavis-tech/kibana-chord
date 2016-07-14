@@ -3,8 +3,6 @@ define(function(require) {
 
   module.controller("ChordController", function($scope, Private) {
 
-    var filterManager = Private(require("ui/filter_manager"));
-
     $scope.$watch("esResponse", function(response) {
       console.log(response);
     });
