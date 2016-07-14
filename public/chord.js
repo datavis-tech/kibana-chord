@@ -21,12 +21,6 @@ define(function(require) {
       description: "Visualize network flows with a Chord Diagram.",
       requiresSearch: true,
       template: require("plugins/kibana-chord/chord.html"),
-      params: {
-        editor: require("plugins/kibana-chord/chord-editor.html"),
-        defaults: {
-          textContent: "Kibana!"
-        }
-      },
       schemas: new Schemas([
         {
           group: "metrics",
