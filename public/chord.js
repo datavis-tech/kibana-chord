@@ -2,13 +2,9 @@ define(function(require) {
   var module = require("ui/modules").get("kibana-chord");
 
   module.controller("ChordController", function($scope, Private) {
-
     $scope.$watch("esResponse", function(response) {
-      console.log(response);
+      $scope.dataDump = JSON.stringify(response, null, 2);
     });
-
-    $scope.greeting = "Hello";
-
   });
 
   function ChordProvider(Private) {
