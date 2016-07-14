@@ -5,6 +5,10 @@ define(function(require) {
 
     var filterManager = Private(require("ui/filter_manager"));
 
+    $scope.$watch("esResponse", function(response) {
+      console.log(response);
+    });
+
     $scope.greeting = "Hello";
 
   });
