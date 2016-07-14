@@ -1,8 +1,12 @@
 define(function(require) {
   var module = require("ui/modules").get("kibana-chord");
 
-  module.controller("ChordController", function($scope) {
+  module.controller("ChordController", function($scope, Private) {
+
+    var filterManager = Private(require("ui/filter_manager"));
+
     $scope.greeting = "Hello";
+
   });
 
   function ChordProvider(Private) {
