@@ -1,5 +1,6 @@
 # This script will re-install the latest version of the plugin and launch Kibana.
 git pull
+npm install
 cd ..
 zip -r --exclude=*.git* kibana-chord.zip kibana-chord
 /opt/kibana/bin/kibana plugin --remove kibana-chord
