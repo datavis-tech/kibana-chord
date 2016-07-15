@@ -23,5 +23,8 @@
   "bugs": {
     "url": "https://github.com/datavis-tech/kibana-chord/issues"
   },
-  "homepage": "https://github.com/datavis-tech/kibana-chord#readme"
+  "homepage": "https://github.com/datavis-tech/kibana-chord#readme",
+  "dependencies": {
+    "d3-selection": "^1.0.0"
+  }
 }
