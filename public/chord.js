@@ -1,7 +1,9 @@
 define(function(require) {
   var module = require("ui/modules").get("kibana-chord");
 
-  module.controller("ChordController", function($scope, Private) {
+  module.controller("ChordController", function($scope, Private, $element) {
+    var div = $element[0];
+
     $scope.$watch("esResponse", function(response) {
       $scope.dataDump = JSON.stringify(response, null, 2);
     });
