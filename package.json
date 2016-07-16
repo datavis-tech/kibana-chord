@@ -24,7 +24,11 @@
     "url": "https://github.com/datavis-tech/kibana-chord/issues"
   },
   "homepage": "https://github.com/datavis-tech/kibana-chord#readme",
-  "dependencies": {
-    "d3-selection": "^1.0.0"
+  "devDependencies": {
+    "d3-selection": "^1.0.0",
+    "d3-transition": "^1.0.0",
+    "rollup": "^0.34.1",
+    "rollup-plugin-node-resolve": "^1.7.1",
+    "uglify-js": "^2.7.0"
   }
 }

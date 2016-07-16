@@ -1,5 +1,5 @@
 define(function(require) {
-  var d3 = require("d3-selection");
+  var d3 = require("../d3");
 
   var module = require("ui/modules").get("kibana-chord");
 
