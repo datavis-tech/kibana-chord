@@ -1,9 +1,8 @@
 # This script will re-install the latest version of the plugin and launch Kibana.
 git pull
 npm install
-cd d3
-sh build.sh
-cd ../..
+npm run build
+cd ..
 zip -r kibana-chord.zip kibana-chord -x "*.git*" "*node_modules*"
 /opt/kibana/bin/kibana plugin --remove kibana-chord
 /opt/kibana/bin/kibana plugin --install kibana-chord -u file://`pwd`/kibana-chord.zip
