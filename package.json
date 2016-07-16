@@ -4,7 +4,7 @@
   "description": "A Chord Diagram Kibana plugin.",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "build":"cd d3; rollup -c && uglifyjs d3.js -c -m -o d3.min.js && rm d3.js"
   },
   "repository": {
     "type": "git",
