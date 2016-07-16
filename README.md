@@ -11,19 +11,25 @@ To install this plugin to your Kibana instance, you can use the following comman
 
 ```bash
 git clone https://github.com/datavis-tech/kibana-chord.git
-zip -r --exclude=*.git* kibana-chord.zip kibana-chord
-kibana plugin --install kibana-chord -u file://`pwd`/kibana-chord.zip
+cd kibana-chord
+npm install
+npm run build
+cd ..
+zip -r kibana-chord.zip kibana-chord -x "*.git*" "*node_modules*"
+/opt/kibana/bin/kibana plugin --install kibana-chord -u file://`pwd`/kibana-chord.zip
 ```
 
 To update to a newer version of this plugin:
 
 ```bash
-kibana plugin --remove kibana-chord
 cd kibana-chord
 git pull
+npm install
+npm run build
 cd ..
-zip -r --exclude=*.git* kibana-chord.zip kibana-chord
-kibana plugin --install kibana-chord -u file://`pwd`/kibana-chord.zip
+zip -r kibana-chord.zip kibana-chord -x "*.git*" "*node_modules*"
+/opt/kibana/bin/kibana plugin --remove kibana-chord
+/opt/kibana/bin/kibana plugin --install kibana-chord -u file://`pwd`/kibana-chord.zip
 ```
 
 ### Usage
