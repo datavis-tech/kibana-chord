@@ -4,7 +4,7 @@
   "description": "A Chord Diagram Kibana plugin.",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "build":"cd d3; rollup -c && uglifyjs d3.js -c -m -o d3.min.js && rm d3.js"
   },
   "repository": {
     "type": "git",
@@ -23,5 +23,12 @@
   "bugs": {
     "url": "https://github.com/datavis-tech/kibana-chord/issues"
   },
-  "homepage": "https://github.com/datavis-tech/kibana-chord#readme"
+  "homepage": "https://github.com/datavis-tech/kibana-chord#readme",
+  "devDependencies": {
+    "d3-selection": "^1.0.0",
+    "d3-transition": "^1.0.0",
+    "rollup": "^0.34.1",
+    "rollup-plugin-node-resolve": "^1.7.1",
+    "uglify-js": "^2.7.0"
+  }
 }

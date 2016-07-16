@@ -1,7 +1,12 @@
 define(function(require) {
+  var d3 = require("../d3/d3.min");
+
   var module = require("ui/modules").get("kibana-chord");
 
-  module.controller("ChordController", function($scope, Private) {
+  module.controller("ChordController", function($scope, Private, $element) {
+    var div = $element[0];
+    d3.select(div).append("h1").text("Hello D3!");
+
     $scope.$watch("esResponse", function(response) {
       $scope.dataDump = JSON.stringify(response, null, 2);
     });
