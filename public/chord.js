@@ -8,7 +8,10 @@ define(function(require) {
     d3.select(div).append("h1").text("Hello D3!");
 
     $scope.$watch("esResponse", function(response) {
-      $scope.dataDump = JSON.stringify(response, null, 2);
+      var tabifyAggResponse = Private(require("ui/agg_response/tabify/tabify"));
+      var table = tabifyAggResponse($scope.vis, response);
+
+      $scope.dataDump = JSON.stringify(table, null, 2);
     });
   });
 
