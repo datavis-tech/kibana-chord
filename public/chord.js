@@ -22,9 +22,6 @@ define(function(require) {
         return row;
       });
 
-      // expose response as a global variable for inspection (temporary)
-      globalResponse = response;
-
       $scope.dataDump = JSON.stringify(table, null, 2);
     });
   });
