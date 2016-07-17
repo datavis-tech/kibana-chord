@@ -14,7 +14,10 @@ define(function(require) {
         asAggConfigResults: true
       });
 
-      $scope.dataDump = JSON.stringify(table, null, 2);
+      // expose table as a global variable for inspection (temporary)
+      globalTable = table;
+
+      //$scope.dataDump = JSON.stringify(table, null, 2);
     });
   });
 
