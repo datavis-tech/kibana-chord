@@ -9,7 +9,10 @@ define(function(require) {
 
     $scope.$watch("esResponse", function(response) {
       var tabifyAggResponse = Private(require("ui/agg_response/tabify/tabify"));
-      var table = tabifyAggResponse($scope.vis, response);
+
+      var table = tabifyAggResponse($scope.vis, response, {
+        asAggConfigResults: true
+      });
 
       $scope.dataDump = JSON.stringify(table, null, 2);
     });
