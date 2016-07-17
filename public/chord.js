@@ -10,14 +10,19 @@ define(function(require) {
     $scope.$watch("esResponse", function(response) {
       var tabifyAggResponse = Private(require("ui/agg_response/tabify/tabify"));
 
-      var table = tabifyAggResponse($scope.vis, response, {
+      var tabified = tabifyAggResponse($scope.vis, response, {
         asAggConfigResults: true
       });
 
-      // expose table as a global variable for inspection (temporary)
-      globalTable = table;
+      var table = tabified.tables[0].rows.map(function (array){
+        var row = {};
+        array.forEach(function (entry){
+          row[entry.aggConfig.id] = entry.value;
+        });
+        return row;
+      });
 
-      //$scope.dataDump = JSON.stringify(table, null, 2);
+      $scope.dataDump = JSON.stringify(table, null, 2);
     });
   });
 
