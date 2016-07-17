@@ -8,7 +8,21 @@ define(function(require) {
     d3.select(div).append("h1").text("Hello D3!");
 
     $scope.$watch("esResponse", function(response) {
-      $scope.dataDump = JSON.stringify(response, null, 2);
+      var tabifyAggResponse = Private(require("ui/agg_response/tabify/tabify"));
+
+      var tabified = tabifyAggResponse($scope.vis, response, {
+        asAggConfigResults: true
+      });
+
+      var table = tabified.tables[0].rows.map(function (array){
+        var row = {};
+        array.forEach(function (entry){
+          row[entry.aggConfig.id] = entry.value;
+        });
+        return row;
+      });
+
+      $scope.dataDump = JSON.stringify(table, null, 2);
     });
   });
 
