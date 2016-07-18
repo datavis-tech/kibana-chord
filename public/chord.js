@@ -4,8 +4,76 @@ define(function(require) {
   var module = require("ui/modules").get("kibana-chord");
 
   module.controller("ChordController", function($scope, Private, $element) {
+
+    // Configuration parameters.
+    var width = 960,
+        height = 960,
+        radius = width / 2 - 50;
+
+    // DOM Elements.
     var div = $element[0];
-    d3.select(div).append("h1").text("Hello D3!");
+    var svg = d3.select(div).append("svg");
+          .attr("width", width)
+          .attr("height", height)
+        g = svg.append("g")
+          .attr("transform", "translate(" + width / 2 + "," + height / 2 + ")"),
+        ribbonsG = g.append("g");
+
+    // D3 layouts, shapes and scales.
+    var ribbon = d3.ribbon()
+          .radius(radius),
+        chord = d3.chord(),
+        color = d3.scaleOrdinal()
+          .range(d3.schemeCategory20);
+
+    // Renders the given data as a chord diagram.
+    function render(data){
+      var matrix = generateMatrix(data),
+          chords = chord(matrix);
+
+      ribbonsG.selectAll("path")
+          .data(chords)
+        .enter().append("path")
+          .attr("class", "ribbon")
+          .attr("d", ribbon)
+          .style("fill", function(d) { return color(d.target.index); });
+      
+    }
+
+    // Generates a matrix (2D array) from the given data, which is expected to
+    // have fields {origin, destination, count}. The matrix data structure is required
+    // for use with the D3 Chord layout.
+    function generateMatrix(data){
+      var places = {},
+          matrix = [],
+          n = 0, i, j;
+
+      function recordPlace(place){
+        if( !(place in places) ){
+          places[place] = n++;
+        }
+      }
+
+      data.forEach(function (d){
+        recordPlace(d.origin);
+        recordPlace(d.destination);
+      });
+
+      for(i = 0; i < n; i++){
+        matrix.push([]);
+        for(j = 0; j < n; j++){
+          matrix[i].push(0);
+        }
+      }
+
+      data.forEach(function (d){
+        i = places[d.origin];
+        j = places[d.destination];
+        matrix[i][j] = d.count;
+      });
+
+      return matrix;
+    }
 
     $scope.$watch("esResponse", function(response) {
       var tabifyAggResponse = Private(require("ui/agg_response/tabify/tabify"));
@@ -22,8 +90,9 @@ define(function(require) {
         return row;
       });
 
-      $scope.dataDump = JSON.stringify(table, null, 2);
+      render(table);
     });
+
   });
 
   function ChordProvider(Private) {
