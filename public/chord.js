@@ -12,7 +12,7 @@ define(function(require) {
 
     // DOM Elements.
     var div = $element[0];
-    var svg = d3.select(div).append("svg");
+    var svg = d3.select(div).append("svg")
           .attr("width", width)
           .attr("height", height)
         g = svg.append("g")
