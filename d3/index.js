@@ -6,3 +6,8 @@ export {
 } from "d3-selection";
 
 import "d3-transition";
+
+export {
+  chord,
+  ribbon
+} from "d3-chord";
