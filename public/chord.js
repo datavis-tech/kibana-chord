@@ -38,14 +38,14 @@ define(function(require) {
     // Renders the given data as a chord diagram.
     function render(data){
       var matrix = generateMatrix(data),
-          chords = chord(matrix);
+          chords = chord(matrix),
+          ribbons = ribbonsG.selectAll("path").data(chords);
 
-      ribbonsG.selectAll("path")
-          .data(chords)
-        .enter().append("path")
-          .attr("class", "ribbon")
-          .attr("d", ribbon)
-          .style("fill", function(d) { return color(d.target.index); });
+      ribbons.enter().append("path").merge(ribbons)
+        .attr("d", ribbon)
+        .style("fill", function(d) { return color(d.target.index); });
+
+      ribbons.exit().remove();
       
     }
 
