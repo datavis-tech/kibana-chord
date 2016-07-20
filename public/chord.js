@@ -44,7 +44,9 @@ define(function(require) {
       ribbons.enter().append("path").merge(ribbons)
         .attr("d", ribbon)
         .style("fill", function(d) { return color(d.source.index); })
-        .style("opacity", 0.6);
+        .style("opacity", 0.6)
+        .style("stroke", "black")
+        .style("stroke-opacity", 0.2);
 
       ribbons.exit().remove();
       
