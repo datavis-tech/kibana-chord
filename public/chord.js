@@ -14,7 +14,10 @@ define(function(require) {
         // Kibana's `tabify` gives us column names "1", "2", and "3".
         chordWeightColumn = "1",
         chordSourceColumn = "2",
-        chordDestinationColumn = "3";
+        chordDestinationColumn = "3",
+        weight = function (d){ return d[chordWeightColumn]; },
+        source = function (d){ return d[chordSourceColumn]; },
+        destination = function (d){ return d[chordDestinationColumn]; };
 
     // DOM Elements.
     var div = $element[0];
