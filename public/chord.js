@@ -43,7 +43,7 @@ define(function(require) {
 
       ribbons.enter().append("path").merge(ribbons)
         .attr("d", ribbon)
-        .style("fill", function(d) { return color(d.target.index); });
+        .style("fill", function(d) { return color(d.source.index); });
 
       ribbons.exit().remove();
       
