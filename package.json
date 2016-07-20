@@ -4,7 +4,7 @@
   "description": "A Chord Diagram Kibana plugin.",
   "main": "index.js",
   "scripts": {
-    "build":"cd d3; rollup -c && uglifyjs d3.js -c -m -o d3.min.js && rm d3.js"
+    "build": "cd d3; rollup -c && uglifyjs d3.js -c -m -o d3.min.js && rm d3.js"
   },
   "repository": {
     "type": "git",
@@ -25,6 +25,8 @@
   },
   "homepage": "https://github.com/datavis-tech/kibana-chord#readme",
   "devDependencies": {
+    "d3-chord": "^1.0.0",
+    "d3-scale": "^1.0.1",
     "d3-selection": "^1.0.0",
     "d3-transition": "^1.0.0",
     "rollup": "^0.34.1",
