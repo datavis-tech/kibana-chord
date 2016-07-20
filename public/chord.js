@@ -64,8 +64,8 @@ define(function(require) {
       }
 
       data.forEach(function (d){
-        recordPlace(d.origin);
-        recordPlace(d.destination);
+        recordPlace(source(d));
+        recordPlace(destination(d));
       });
 
       for(i = 0; i < n; i++){
@@ -76,9 +76,9 @@ define(function(require) {
       }
 
       data.forEach(function (d){
-        i = places[d.origin];
-        j = places[d.destination];
-        matrix[i][j] = d.count;
+        i = places[source(d)];
+        j = places[destination(d)];
+        matrix[i][j] = weight(d);
       });
 
       return matrix;
