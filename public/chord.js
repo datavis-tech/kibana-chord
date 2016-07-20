@@ -8,7 +8,13 @@ define(function(require) {
     // Configuration parameters.
     var width = 960,
         height = 960,
-        radius = width / 2 - 50;
+        radius = width / 2 - 50,
+
+        // These "column names" are keys in the row objects of the input table.
+        // Kibana's `tabify` gives us column names "1", "2", and "3".
+        chordWeightColumn = "1",
+        chordSourceColumn = "2",
+        chordDestinationColumn = "3";
 
     // DOM Elements.
     var div = $element[0];
