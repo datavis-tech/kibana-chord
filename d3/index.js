@@ -11,3 +11,8 @@ export {
   chord,
   ribbon
 } from "d3-chord";
+
+export {
+  scaleOrdinal,
+  schemeCategory20
+} from "d3-scale";
