@@ -6,8 +6,8 @@ define(function(require) {
   module.controller("ChordController", function($scope, Private, $element) {
 
     // Configuration parameters.
-    var width = 960,
-        height = 960,
+    var width = 500,
+        height = 500,
         radius = width / 2 - 50,
 
         // These "column names" are keys in the row objects of the input table.
