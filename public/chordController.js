@@ -11,7 +11,8 @@ define(function(require) {
     // Configuration parameters.
     var width = 500,
         height = 500,
-        innerRadius = width / 2 - 50;
+        innerRadius = width / 2 - 50,
+        labelPadding = 10;
 
     // These "column" variables represent keys in the row objects of the input table.
     var chordWeightColumn = "1",
@@ -76,7 +77,7 @@ define(function(require) {
             var angle = (d.startAngle + d.endAngle) / 2;
             return (
               "rotate(" + (angle / Math.PI * 180 - 90) + ")" +
-              "translate(" + (outerRadius + labelPadding) + ")"
+              "translate(" + (innerRadius + labelPadding) + ")"
             );
           })
           .text(function(d) {
