@@ -69,6 +69,20 @@ define(function(require) {
           .data(chords.groups)
         .enter().append("g");
 
+      // Add labels
+      groups
+        .append("text")
+          .attr("transform", function(d) {
+            var angle = (d.startAngle + d.endAngle) / 2;
+            return (
+              "rotate(" + (angle / Math.PI * 180 - 90) + ")" +
+              "translate(" + (outerRadius + labelPadding) + ")"
+            );
+          })
+          .text(function(d) {
+            return matrix.names[d.index];
+          })
+
     }
 
     // Generates a matrix (2D array) from the given data, which is expected to
