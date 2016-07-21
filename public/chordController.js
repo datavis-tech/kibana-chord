@@ -11,7 +11,7 @@ define(function(require) {
     // Configuration parameters.
     var width = 500,
         height = 500,
-        radius = width / 2 - 50;
+        innerRadius = width / 2 - 50;
 
     // These "column" variables represent keys in the row objects of the input table.
     var chordWeightColumn = "1",
@@ -35,7 +35,7 @@ define(function(require) {
 
     // D3 layouts, shapes and scales.
     var ribbon = d3.ribbon()
-          .radius(radius),
+          .radius(innerRadius),
         chord = d3.chord(),
         color = d3.scaleOrdinal()
           .range(d3.schemeCategory20);
