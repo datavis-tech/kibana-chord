@@ -64,13 +64,13 @@ define(function(require) {
       ribbons.exit().remove();
 
       // Scaffold the chord groups.
-      var groups = groupsG
+      var chordGroups = chordGroupsG
         .selectAll("g")
           .data(chords.groups)
         .enter().append("g");
 
       // Add labels
-      groups
+      chordGroups
         .append("text")
           .attr("transform", function(d) {
             var angle = (d.startAngle + d.endAngle) / 2;
