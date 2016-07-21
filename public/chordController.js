@@ -68,19 +68,19 @@ define(function(require) {
     // have fields {origin, destination, count}. The matrix data structure is required
     // for use with the D3 Chord layout.
     function generateMatrix(data){
-      var places = {},
+      var indices = {},
           matrix = [],
           n = 0, i, j;
 
-      function recordPlace(place){
-        if( !(place in places) ){
-          places[place] = n++;
+      function recordIndex(name){
+        if( !(name in indices) ){
+          indices[name] = n++;
         }
       }
 
       data.forEach(function (d){
-        recordPlace(source(d));
-        recordPlace(destination(d));
+        recordIndex(source(d));
+        recordIndex(destination(d));
       });
 
       for(i = 0; i < n; i++){
@@ -91,8 +91,8 @@ define(function(require) {
       }
 
       data.forEach(function (d){
-        i = places[source(d)];
-        j = places[destination(d)];
+        i = indices[source(d)];
+        j = indices[destination(d)];
         matrix[i][j] = weight(d);
       });
 
