@@ -70,11 +70,13 @@ define(function(require) {
     function generateMatrix(data){
       var indices = {},
           matrix = [],
+          names = [],
           n = 0, i, j;
 
       function recordIndex(name){
         if( !(name in indices) ){
           indices[name] = n++;
+          names.push(name);
         }
       }
 
@@ -95,6 +97,8 @@ define(function(require) {
         j = indices[destination(d)];
         matrix[i][j] = weight(d);
       });
+
+      matrix.names = names;
 
       return matrix;
     }
