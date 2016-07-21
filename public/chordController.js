@@ -28,10 +28,11 @@ define(function(require) {
     var div = $element[0];
     var svg = d3.select(div).append("svg")
           .attr("width", width)
-          .attr("height", height)
+          .attr("height", height),
         g = svg.append("g")
           .attr("transform", "translate(" + width / 2 + "," + height / 2 + ")"),
-        ribbonsG = g.append("g");
+        ribbonsG = g.append("g"),
+        chordGroupsG = g.append("g");
 
     // D3 layouts, shapes and scales.
     var ribbon = d3.ribbon()
@@ -61,7 +62,13 @@ define(function(require) {
         .style("stroke", "black")
         .style("stroke-opacity", 0.2);
       ribbons.exit().remove();
-      
+
+      // Scaffold the chord groups.
+      var groups = groupsG
+        .selectAll("g")
+          .data(chords.groups)
+        .enter().append("g");
+
     }
 
     // Generates a matrix (2D array) from the given data, which is expected to
