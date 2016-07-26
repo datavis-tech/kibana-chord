@@ -2,7 +2,8 @@ export {
   event,
   selection,
   select,
-  selectAll
+  selectAll,
+  local
 } from "d3-selection";
 
 import "d3-transition";
