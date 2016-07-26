@@ -4,26 +4,28 @@ define(function(require) {
   // Load D3 v4 via our custom bundle build output.
   var d3 = require("../d3/d3.min");
 
-  // Register the controller with the Kibana plugin Angular module.
+  // Access the Kibana plugin Angular module.
   var module = require("ui/modules").get("kibana-chord");
+
+  // Configuration parameters.
+  var width = 500,
+      height = 500,
+      innerRadius = width / 2 - 50,
+      labelPadding = 10;
+
+  // These "column" variables represent keys in the row objects of the input table.
+  var chordWeightColumn = "1",
+      chordSourceColumn = "2",
+      chordDestinationColumn = "3";
+
+  // Kibana's `tabify` happens to give us column names "1", "2", and "3".
+  // These correspond to the Schemas defined for the plugin.
+  var weight = function (d){ return d[chordWeightColumn]; },
+      source = function (d){ return d[chordSourceColumn]; },
+      destination = function (d){ return d[chordDestinationColumn]; };
+
+  // Register the controller with the Kibana plugin Angular module.
   module.controller("ChordController", function($scope, Private, $element) {
-
-    // Configuration parameters.
-    var width = 500,
-        height = 500,
-        innerRadius = width / 2 - 50,
-        labelPadding = 10;
-
-    // These "column" variables represent keys in the row objects of the input table.
-    var chordWeightColumn = "1",
-        chordSourceColumn = "2",
-        chordDestinationColumn = "3";
-
-    // Kibana's `tabify` happens to give us column names "1", "2", and "3".
-    // These correspond to the Schemas defined for the plugin.
-    var weight = function (d){ return d[chordWeightColumn]; },
-        source = function (d){ return d[chordSourceColumn]; },
-        destination = function (d){ return d[chordDestinationColumn]; };
 
     // DOM Elements.
     var div = $element[0];
