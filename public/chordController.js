@@ -62,7 +62,9 @@ define(function(require) {
           chords = chord(matrix);
 
       // Render the ribbons of the Chord Diagram (the connecting fibers inside the circle).
-      var ribbons = ribbonsG.selectAll("path").data(chords)
+      var ribbons = ribbonsG
+        .selectAll("path")
+          .data(chords)
       ribbons.enter().append("path").merge(ribbons)
         .attr("d", ribbon)
         .style("fill", function(d) { return color(d.source.index); })
@@ -74,12 +76,16 @@ define(function(require) {
       // Scaffold the chord groups.
       var chordGroups = chordGroupsG
         .selectAll("g")
-          .data(chords.groups)
-        .enter().append("g");
+          .data(chords.groups);
+      chordGroups
+        .enter()
+        .append("g")
+        .append("text");
+      chordGroups.exit().remove();
 
       // Add labels
       chordGroups
-        .append("text")
+        .select("g text")
           .each(function(d) {
             angle.set(this, (d.startAngle + d.endAngle) / 2);
             flip.set(this, angle.get(this) > Math.PI);
