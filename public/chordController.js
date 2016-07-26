@@ -26,7 +26,8 @@ define(function(require) {
 
   // D3 Local objects for DOM-local storage of label angles and
   // whether or not labels should be flipped upside-down.
-  var angle = d3.local();
+  var angle = d3.local(),
+      flip = d3.local();
 
   // Register the controller with the Kibana plugin Angular module.
   module.controller("ChordController", function($scope, Private, $element) {
@@ -81,16 +82,21 @@ define(function(require) {
         .append("text")
           .each(function(d) {
             angle.set(this, (d.startAngle + d.endAngle) / 2);
+            flip.set(this, angle.get(this) > Math.PI);
           })
           .attr("transform", function(d) {
-            return (
-              "rotate(" + (angle.get(this) / Math.PI * 180 - 90) + ")" +
-              "translate(" + (innerRadius + labelPadding) + ")"
-            );
+            return [
+              "rotate(" + (angle.get(this) / Math.PI * 180 - 90) + ")"),
+              "translate(" + (innerRadius + labelPadding) + ")"),
+              flip.get(this) ? "rotate(180)" : "")
+            ].join("");
+          })
+          .attr("text-anchor", function(d) {
+            return flip.get(this) ? "end" : "start";
           })
           .text(function(d) {
             return matrix.names[d.index];
-          })
+          });
 
     }
 
