@@ -17,3 +17,7 @@ export {
   scaleOrdinal,
   schemeCategory20
 } from "d3-scale";
+
+export {
+  arc
+} from "d3-shape";
