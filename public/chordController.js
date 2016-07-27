@@ -12,7 +12,7 @@ define(function(require) {
       height = 500,
       outerPadding = 50,
       arcThickness = 30,
-      padAngle = 0.4,
+      padAngle = 0.04,
       outerRadius = width / 2 - outerPadding,
       innerRadius = outerRadius - arcThickness,
       labelPadding = 10;
