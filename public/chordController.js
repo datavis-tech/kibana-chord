@@ -11,7 +11,7 @@ define(function(require) {
   var width = 500,
       height = 500,
       outerPadding = 50,
-      arcThickness = 30,
+      arcThickness = 20,
       padAngle = 0.04,
       outerRadius = width / 2 - outerPadding,
       innerRadius = outerRadius - arcThickness,
