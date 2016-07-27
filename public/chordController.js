@@ -97,7 +97,7 @@ define(function(require) {
           .attr("transform", function(d) {
             return [
               "rotate(" + (angle.get(this) / Math.PI * 180 - 90) + ")",
-              "translate(" + (innerRadius + labelPadding) + ")",
+              "translate(" + (outerRadius + labelPadding) + ")",
               flip.get(this) ? "rotate(180)" : ""
             ].join("");
           })
