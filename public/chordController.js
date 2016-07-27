@@ -12,6 +12,7 @@ define(function(require) {
       height = 500,
       outerPadding = 50,
       arcThickness = 30,
+      padAngle = 0.4,
       outerRadius = width / 2 - outerPadding,
       innerRadius = outerRadius - arcThickness,
       labelPadding = 10;
@@ -48,7 +49,8 @@ define(function(require) {
     // D3 layouts, shapes and scales.
     var ribbon = d3.ribbon()
           .radius(innerRadius),
-        chord = d3.chord(),
+        chord = d3.chord()
+          .padAngle(padAngle),
         color = d3.scaleOrdinal()
           .range(d3.schemeCategory20),
         arc = d3.arc()
