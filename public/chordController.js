@@ -10,7 +10,10 @@ define(function(require) {
   // Configuration parameters.
   var width = 500,
       height = 500,
-      innerRadius = width / 2 - 50,
+      outerPadding = 50,
+      arcThickness = 30,
+      outerRadius = width / 2 - outerPadding,
+      innerRadius = outerRadius - arcThickness,
       labelPadding = 10;
 
   // These "column" variables represent keys in the row objects of the input table.
@@ -47,7 +50,10 @@ define(function(require) {
           .radius(innerRadius),
         chord = d3.chord(),
         color = d3.scaleOrdinal()
-          .range(d3.schemeCategory20);
+          .range(d3.schemeCategory20),
+        arc = d3.arc()
+          .innerRadius(innerRadius)
+          .outerRadius(outerRadius);
 
     // Update the visualization with new data as the query response changes.
     $scope.$watch("esResponse", function(response) {
@@ -77,6 +83,7 @@ define(function(require) {
       var chordGroups = chordGroupsG.selectAll("g").data(chords.groups);
       var chordGroupsEnter = chordGroups.enter().append("g");
       chordGroupsEnter.append("text");
+      chordGroupsEnter.append("path");
       chordGroups.exit().remove();
       chordGroups = chordGroups.merge(chordGroupsEnter);
 
@@ -99,6 +106,14 @@ define(function(require) {
           })
           .text(function(d) {
             return matrix.names[d.index];
+          });
+
+      // Render the chord group arcs.
+      chordGroups
+        .select("path")
+          .attr("d", arc)
+          .style("fill", function(group) {
+            return color(group.index);
           });
 
     }
