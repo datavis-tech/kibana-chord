@@ -106,6 +106,7 @@ define(function(require) {
           .attr("text-anchor", function(d) {
             return flip.get(this) ? "end" : "start";
           })
+          .attr("alignment-baseline", "central")
           .text(function(d) {
             return matrix.names[d.index];
           });
