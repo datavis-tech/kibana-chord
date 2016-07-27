@@ -40,6 +40,14 @@ define(function(require) {
           min: 1,
           max: 1,
           aggFilter: "terms"
+        },
+        {
+          group: 'buckets',
+          name: 'split',
+          title: 'Split Diagram',
+          min: 0,
+          max: 1,
+          aggFilter: ['terms', 'filters']
         }
       ])
     });
