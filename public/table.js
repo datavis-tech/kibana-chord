@@ -4,6 +4,9 @@ define(function(require) {
   // Load D3 v4 via our custom bundle build output.
   var d3 = require("../d3/d3.min");
 
+  // Configuration.
+  var headerBackgroundColor = "lightblue";
+
   // Constructor function for a data table.
   // Accepts a container `div` DOM element.
   return function Table(div){
@@ -14,6 +17,7 @@ define(function(require) {
             .attr("class", "table table-bordered"),
         tableHeader = tableRoot
           .append("thead")
+            .style("background-color", headerBackgroundColor)
           .append("tr"),
         tableBody = tableRoot
           .append("tbody");
