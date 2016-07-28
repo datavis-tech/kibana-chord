@@ -35,8 +35,8 @@ define(function(require) {
 
       // Populate the table rows.
       var tr = tableBody.selectAll("tr").data(data);
-      tr.enter().append("tr");
       tr.exit().remove();
+      tr = tr.enter().append("tr").merge(tr);
       
       // Set the values for each table cell using a nested selection.
       var td = tr.selectAll("td").data(function (row) {
