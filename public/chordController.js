@@ -1,6 +1,9 @@
 // This module defines the Angular controller that renders the Chord Diagram.
 define(function(require) {
 
+  // Load D3 v4 via our custom bundle build output.
+  var d3 = require("../d3/d3.min");
+
   // Load the module that defines the Chord Diagram using D3.
   var ChordDiagram = require("./chordDiagram");
 
@@ -16,11 +19,28 @@ define(function(require) {
     // Access the DOM element provided by Angular's dependency injection.
     var div = $element[0];
 
+    // Construct a Bootstrap Grid to position the Chord Diagram and Table.
+    var container = d3.select(div)
+            .style("width", "100%")
+          .append("div")
+            .attr("class", "container-fluid")
+          .append("div")
+            .attr("class", "row"),
+        chordContainer = container
+          .append("div")
+            .attr("class", "col-md-6")
+            .node(),
+        tableContainer = container
+          .append("div")
+            .attr("class", "col-md-6")
+            .node();
+
+
     // Construct an instance of the Chord Diagram.
-    var chordDiagram = ChordDiagram(div);
+    var chordDiagram = ChordDiagram(chordContainer);
 
     // Construct an instance of the HTML Table.
-    var table = Table(div);
+    var table = Table(tableContainer);
 
     // Metadata for rendering the HTML table.
     var columns = [
