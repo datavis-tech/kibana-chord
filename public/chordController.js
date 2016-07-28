@@ -1,8 +1,11 @@
 // This module defines the Angular controller that renders the Chord Diagram.
 define(function(require) {
 
-  // Load the module that defines the Chord Diagram using only D3.
+  // Load the module that defines the Chord Diagram using D3.
   var ChordDiagram = require("./chordDiagram");
+
+  // Load the module that defines the HTML Table using D3.
+  var Table = require("./table");
 
   // Access the Kibana plugin Angular module.
   var module = require("ui/modules").get("kibana-chord");
@@ -16,9 +19,27 @@ define(function(require) {
     // Construct an instance of the Chord Diagram.
     var chordDiagram = ChordDiagram(div);
 
+    // Construct an instance of the HTML Table.
+    var table = Table(div);
+
+    // Metadata for rendering the HTML table.
+    var columns = [
+      { title: "Chord Weight", property: "1" },
+      { title: "Chord Sources", property: "2" },
+      { title: "Chord Destinations", property: "3" }
+    ];
+
     // Update the visualization with new data as the query response changes.
     $scope.$watch("esResponse", function(response) {
-      chordDiagram(tabify(response));
+
+      // Tabify the response.
+      var data = tabify(response);
+
+      // Render the Chord Diagram.
+      chordDiagram(data);
+
+      // Render the HTML Table.
+      table(data, columns);
     });
 
     // Converts hierarchical result set from ElasticSearch into a tabular form.
