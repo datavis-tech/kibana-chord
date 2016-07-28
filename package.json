@@ -1,6 +1,6 @@
 {
   "name": "kibana-chord",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "description": "A Chord Diagram Kibana plugin.",
   "main": "index.js",
   "scripts": {
