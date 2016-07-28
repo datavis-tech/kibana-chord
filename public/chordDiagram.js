@@ -1,4 +1,4 @@
-// This module defines a reusable Chord Diagram using only D3.js (no Angular here).
+// This module defines a reusable Chord Diagram using D3.
 define(function(require) {
 
   // Load D3 v4 via our custom bundle build output.

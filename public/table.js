@@ -56,4 +56,3 @@ define(function(require) {
     return render;
   }
 });
-
