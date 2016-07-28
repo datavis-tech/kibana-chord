@@ -11,8 +11,7 @@ define(function(require) {
     // DOM Elements.
     var tableRoot = d3.select(div)
           .append("table")
-            .attr("class", "table")
-            .attr("class", "table-bordered"),
+            .attr("class", "table table-bordered"),
         tableHeader = tableRoot
           .append("thead")
           .append("tr"),
