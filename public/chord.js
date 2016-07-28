@@ -42,12 +42,12 @@ define(function(require) {
           aggFilter: "terms"
         },
         {
-          group: 'buckets',
-          name: 'split',
-          title: 'Split Diagram',
+          group: "buckets",
+          name: "split",
+          title: "Split Diagram",
           min: 0,
           max: 1,
-          aggFilter: ['terms', 'filters']
+          aggFilter: ["terms", "filters"]
         }
       ])
     });
