@@ -15,7 +15,10 @@ module.exports = function(kibana) {
         path: "/api/kibana-chord/{source}/{destination}",
         method: "GET",
         handler(req, reply) {
-          reply("Hello World");
+          reply([
+            "Source: " + req.params.source,
+            "Destination: " + req.params.destination
+          ].join("<br>"));
         }
       });
     }
