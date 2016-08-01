@@ -71,7 +71,12 @@ define(function(require) {
         .style("fill", function(d) { return color(d.source.index); })
         .style("opacity", 0.6)
         .style("stroke", "black")
-        .style("stroke-opacity", 0.2);
+        .style("stroke-opacity", 0.2)
+        .on("mousedown", function (d){
+          console.log(d);
+          console.log("source: " + matrix.names[d.source.index];
+          console.log("destination: " + matrix.names[d.destination.index];
+        });
       ribbons.exit().remove();
 
       // Scaffold the chord groups.
