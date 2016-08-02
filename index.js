@@ -14,11 +14,29 @@ module.exports = function(kibana) {
       server.route({
         path: "/api/kibana-chord/{source}/{destination}",
         method: "GET",
-        handler(req, reply) {
-          reply([
-            "Source: " + req.params.source,
-            "Destination: " + req.params.destination
-          ].join("<br>"));
+        handler: function(req, reply) {
+
+          server.plugins.elasticsearch.callWithRequest(req, "search", {
+            index: "flowindex",
+            body: {
+              query: {  
+                bool: {   
+                  must: [   
+                    { "term": {"nuage_metadata.sourcepolicygroups": "PG5"} }, 
+                    { "term": {"nuage_metadata.destinationpolicygroups": "PG3"} }, 
+                    { "range": { "timestamp": {"gte": "now-1y/y", "lte": "now/y", "format": "epoch_millis"}}}
+                  ]
+                }
+              }
+            }
+          }).then(function (response) {
+            reply(JSON.stringify(response, null, 2));
+          });
+
+          //reply([
+          //  "Source: " + req.params.source,
+          //  "Destination: " + req.params.destination
+          //].join("<br>"));
         }
       });
     }
