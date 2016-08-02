@@ -16,8 +16,11 @@ module.exports = function(kibana) {
         method: "POST",
         handler: function(req, reply) {
 
-          // Prints { "foo": "bar" }
-          console.log(req.payload);
+          // Unpack the query parameters from the client.
+          var index = req.payload.index;
+          var time = req.payload.time;
+
+          console.log(index, time);
 
           server.plugins.elasticsearch.callWithRequest(req, "search", {
             index: "flowindex",
