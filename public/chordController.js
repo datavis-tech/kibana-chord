@@ -14,7 +14,7 @@ define(function(require) {
   var module = require("ui/modules").get("kibana-chord");
 
   // Register the controller with the Kibana plugin Angular module.
-  module.controller("ChordController", function($scope, Private, $element) {
+  module.controller("ChordController", function($scope, Private, $element, $http) {
 
     // Access the DOM element provided by Angular's dependency injection.
     var div = $element[0];
@@ -49,19 +49,6 @@ define(function(require) {
       { title: "Chord Destinations", property: "3" }
     ];
 
-    // Update the visualization with new data as the query response changes.
-    $scope.$watch("esResponse", function(response) {
-
-      // Tabify the response.
-      var data = tabify(response);
-
-      // Render the Chord Diagram.
-      chordDiagram(data);
-
-      // Render the HTML Table.
-      table(data, columns);
-    });
-
     // Converts hierarchical result set from ElasticSearch into a tabular form.
     // Returns an array of row objects, similar to the format returned by d3.csv.
     function tabify(response){
@@ -76,5 +63,29 @@ define(function(require) {
         return row;
       });
     }
+
+    // Update the visualization with new data as the query response changes.
+    $scope.$watch("esResponse", function(response) {
+
+      // Tabify the response.
+      var data = tabify(response);
+
+      // Render the Chord Diagram.
+      chordDiagram(data);
+
+      // Render the HTML Table.
+      table(data, columns);
+    });
+
+    // Invoke our custom middleware for querying ElasticSearch.
+    $http
+      .get("/api/kibana-chord/PG5/PG3")
+      .then(function successCallback(response){
+        console.log(JSON.stringify(response.data));
+      }, function errorCallback(response){
+        throw response;
+      });
+
+
   });
 });
