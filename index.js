@@ -12,9 +12,12 @@ module.exports = function(kibana) {
     // custom ElasticSearch queries.
     init: function (server, options) {
       server.route({
-        path: "/api/kibana-chord/{source}/{destination}",
-        method: "GET",
+        path: "/api/kibana-chord",
+        method: "POST",
         handler: function(req, reply) {
+
+          // Prints { "foo": "bar" }
+          console.log(req.payload);
 
           server.plugins.elasticsearch.callWithRequest(req, "search", {
             index: "flowindex",

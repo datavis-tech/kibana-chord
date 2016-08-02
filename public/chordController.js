@@ -79,7 +79,7 @@ define(function(require) {
 
     // Invoke our custom middleware for querying ElasticSearch.
     $http
-      .get("/api/kibana-chord/PG5/PG3")
+      .post("/api/kibana-chord", { foo: "bar" })
       .then(function successCallback(response){
         console.log(JSON.stringify(response.data));
       }, function errorCallback(response){
