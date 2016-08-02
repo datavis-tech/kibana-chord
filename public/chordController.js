@@ -14,7 +14,7 @@ define(function(require) {
   var module = require("ui/modules").get("kibana-chord");
 
   // Register the controller with the Kibana plugin Angular module.
-  module.controller("ChordController", function($scope, Private, $element, $http) {
+  module.controller("ChordController", function($scope, $rootScope, Private, $element, $http) {
 
     // Access the DOM element provided by Angular's dependency injection.
     var div = $element[0];
@@ -79,13 +79,15 @@ define(function(require) {
 
     // Invoke our custom middleware for querying ElasticSearch.
     $http
-      .post("/api/kibana-chord", { foo: "bar" })
+      .post("/api/kibana-chord", {
+        index: $scope.vis.indexPattern.id,
+        time: $rootScope.timefilter.time
+      })
       .then(function successCallback(response){
         console.log(JSON.stringify(response.data));
       }, function errorCallback(response){
         throw response;
       });
-
 
   });
 });
