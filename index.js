@@ -22,19 +22,35 @@ module.exports = function(kibana) {
 
           console.log(index, time);
 
+          var query = {
+            bool: {   
+              must: [   
+                {
+                  "term": {
+                    "nuage_metadata.sourcepolicygroups": "PG5"
+                  }
+                }, 
+                {
+                  "term": {
+                    "nuage_metadata.destinationpolicygroups": "PG3"
+                  }
+                }, 
+                {
+                  "range": {
+                    "timestamp": {
+                      "gte": "now-1y/y",
+                      "lte": "now/y",
+                      "format": "epoch_millis"
+                    }
+                  }
+                }
+              ]
+            }
+          };
+
           server.plugins.elasticsearch.callWithRequest(req, "search", {
             index: "flowindex",
-            body: {
-              query: {  
-                bool: {   
-                  must: [   
-                    { "term": {"nuage_metadata.sourcepolicygroups": "PG5"} }, 
-                    { "term": {"nuage_metadata.destinationpolicygroups": "PG3"} }, 
-                    { "range": { "timestamp": {"gte": "now-1y/y", "lte": "now/y", "format": "epoch_millis"}}}
-                  ]
-                }
-              }
-            }
+            body: { query: query }
           }).then(function (response) {
             reply(JSON.stringify(response, null, 2));
           });
