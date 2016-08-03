@@ -13,8 +13,9 @@ define(function(require) {
   // Access the Kibana plugin Angular module.
   var module = require("ui/modules").get("kibana-chord");
 
+
   // Register the controller with the Kibana plugin Angular module.
-  module.controller("ChordController", function($scope, Private, $element) {
+  module.controller("ChordController", function($scope, $rootScope, Private, $element, $http) {
 
     // Access the DOM element provided by Angular's dependency injection.
     var div = $element[0];
@@ -49,19 +50,6 @@ define(function(require) {
       { title: "Chord Destinations", property: "3" }
     ];
 
-    // Update the visualization with new data as the query response changes.
-    $scope.$watch("esResponse", function(response) {
-
-      // Tabify the response.
-      var data = tabify(response);
-
-      // Render the Chord Diagram.
-      chordDiagram(data);
-
-      // Render the HTML Table.
-      table(data, columns);
-    });
-
     // Converts hierarchical result set from ElasticSearch into a tabular form.
     // Returns an array of row objects, similar to the format returned by d3.csv.
     function tabify(response){
@@ -76,5 +64,43 @@ define(function(require) {
         return row;
       });
     }
+
+    // Update the visualization with new data as the query response changes.
+    $scope.$watch("esResponse", function(response) {
+
+      // Tabify the response.
+      var data = tabify(response);
+
+      // Render the Chord Diagram.
+      chordDiagram(data);
+
+      // Render the HTML Table.
+      table(data, columns);
+    });
+
+    // Invoke our custom middleware for querying ElasticSearch
+    // when the user clicks on the ribbon.
+    //
+    // The argument `options` has `source` and `destination` properties
+    // based on which ribbon was clicked.
+    chordDiagram.onRibbonClick(function (options){
+
+      // Add index and time to the options,
+      // which will be the HTTP POST payload.
+      options.index = $scope.vis.indexPattern.id;
+      options.time = $rootScope.timefilter.time;
+
+      $http
+        .post("/api/kibana-chord", options)
+        .then(function successCallback(response){
+
+          // TODO set the content of the table here.
+          // table(tabify(response), columns);
+
+          console.log(JSON.stringify(response.data));
+        }, function errorCallback(response){
+          throw response;
+        });
+    });
   });
 });
