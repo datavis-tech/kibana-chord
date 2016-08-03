@@ -92,22 +92,18 @@ define(function(require) {
         .post("/api/kibana-chord", options)
         .then(function successCallback(response){
 
+          // Transform the response data into a form the table can use.
           var data = response.data.hits.hits.map(function (d){
-            return {
-              sourceip: d._source.sourceip,
-              destinationip: d._source.destinationip,
-              type: d._source.type
-            };
+            return d._source;
           });
-
-          console.log(response.data);
-          console.log(data);
 
           // Render the HTML Table.
           table(data, [
             { title: "Source IP", property: "sourceip" },
             { title: "Destination IP", property: "destinationip" },
-            { title: "Type", property: "type" }
+            { title: "Type", property: "type" },
+            { title: "Timestamp", property: "timestamp" },
+            { title: "Packets", property: "packets" }
           ]);
 
         }, function errorCallback(response){
