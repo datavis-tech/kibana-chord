@@ -78,24 +78,29 @@ define(function(require) {
       table(data, columns);
     });
 
-    //TODO invoke middleware on chord click.
-    // chordDiagram.onClick(function (d){ $http.post... });
+    // Invoke our custom middleware for querying ElasticSearch
+    // when the user clicks on the ribbon.
+    //
+    // The argument `options` has `source` and `destination` properties
+    // based on which ribbon was clicked.
+    chordDiagram.onRibbonClick(function (options){
 
-    // Invoke our custom middleware for querying ElasticSearch.
-    $http
-      .post("/api/kibana-chord", {
-        index: $scope.vis.indexPattern.id,
-        time: $rootScope.timefilter.time
-      })
-      .then(function successCallback(response){
+      // Add index and time to the options,
+      // which will be the HTTP POST payload.
+      options.index = $scope.vis.indexPattern.id;
+      options.time = $rootScope.timefilter.time;
 
-        // TODO set the content of the table here.
-        // table(tabify(response), columns);
+      $http
+        .post("/api/kibana-chord", options)
+        .then(function successCallback(response){
 
-        console.log(JSON.stringify(response.data));
-      }, function errorCallback(response){
-        throw response;
-      });
+          // TODO set the content of the table here.
+          // table(tabify(response), columns);
 
+          console.log(JSON.stringify(response.data));
+        }, function errorCallback(response){
+          throw response;
+        });
+    });
   });
 });
