@@ -25,46 +25,48 @@ module.exports = function(kibana) {
 
           console.log(index, time);
 
-          var query = {
-            bool: {   
-              must: [   
-                {
-                  "term": {
+          var options = {
+            index: index,
+            body: {
+              query: {
+                bool: {
+                  must: [
+                    {
+                      "term": {
 
-                    // TODO make this dynamic.
-                    "nuage_metadata.sourcepolicygroups": "PG5"
-                  }
-                }, 
-                {
-                  "term": {
+                        // TODO make this dynamic.
+                        "nuage_metadata.sourcepolicygroups": "PG5"
+                      }
+                    }, 
+                    {
+                      "term": {
 
-                    // TODO make this dynamic.
-                    "nuage_metadata.destinationpolicygroups": "PG3"
-                  }
-                }, 
-                {
-                  "range": {
+                        // TODO make this dynamic.
+                        "nuage_metadata.destinationpolicygroups": "PG3"
+                      }
+                    }, 
+                    {
+                      "range": {
 
-                    // TODO make this dynamic.
-                    "timestamp": {
-                      "gte": "now-1y/y",
-                      "lte": "now/y",
-                      "format": "epoch_millis"
+                        // TODO make this dynamic.
+                        "timestamp": {
+                          "gte": "now-1y/y",
+                          "lte": "now/y",
+                          "format": "epoch_millis"
+                        }
+                      }
                     }
-                  }
+                  ]
                 }
-              ]
+              }
             }
           };
 
-          server.plugins.elasticsearch.callWithRequest(req, "search", {
-            index: "flowindex",
-            body: {
-              query: query
-            }
-          }).then(function (response) {
-            reply(JSON.stringify(response, null, 2));
-          });
+          server.plugins.elasticsearch
+            .callWithRequest(req, "search", options)
+            .then(function (response) {
+              reply(JSON.stringify(response, null, 2));
+            });
 
           //reply([
           //  "Source: " + req.params.source,
