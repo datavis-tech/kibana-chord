@@ -13,6 +13,7 @@ define(function(require) {
   // Access the Kibana plugin Angular module.
   var module = require("ui/modules").get("kibana-chord");
 
+
   // Register the controller with the Kibana plugin Angular module.
   module.controller("ChordController", function($scope, $rootScope, Private, $element, $http) {
 
@@ -77,6 +78,9 @@ define(function(require) {
       table(data, columns);
     });
 
+    //TODO invoke middleware on chord click.
+    // chordDiagram.onClick(function (d){ $http.post... });
+
     // Invoke our custom middleware for querying ElasticSearch.
     $http
       .post("/api/kibana-chord", {
@@ -84,6 +88,10 @@ define(function(require) {
         time: $rootScope.timefilter.time
       })
       .then(function successCallback(response){
+
+        // TODO set the content of the table here.
+        // table(tabify(response), columns);
+
         console.log(JSON.stringify(response.data));
       }, function errorCallback(response){
         throw response;

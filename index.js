@@ -20,6 +20,9 @@ module.exports = function(kibana) {
           var index = req.payload.index;
           var time = req.payload.time;
 
+          // TODO include souce, dest
+          // TODO include sourceField, destField from client Schema config
+
           console.log(index, time);
 
           var query = {
@@ -27,16 +30,22 @@ module.exports = function(kibana) {
               must: [   
                 {
                   "term": {
+
+                    // TODO make this dynamic.
                     "nuage_metadata.sourcepolicygroups": "PG5"
                   }
                 }, 
                 {
                   "term": {
+
+                    // TODO make this dynamic.
                     "nuage_metadata.destinationpolicygroups": "PG3"
                   }
                 }, 
                 {
                   "range": {
+
+                    // TODO make this dynamic.
                     "timestamp": {
                       "gte": "now-1y/y",
                       "lte": "now/y",
@@ -50,7 +59,9 @@ module.exports = function(kibana) {
 
           server.plugins.elasticsearch.callWithRequest(req, "search", {
             index: "flowindex",
-            body: { query: query }
+            body: {
+              query: query
+            }
           }).then(function (response) {
             reply(JSON.stringify(response, null, 2));
           });

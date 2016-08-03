@@ -17,6 +17,7 @@ define(function(require) {
         outerRadius = width / 2 - outerPadding,
         innerRadius = outerRadius - arcThickness,
         labelPadding = 10;
+        // TODO onRibbonClickCallback = function (){};
 
     // These "column" variables represent keys in the row objects of the input table.
     // Kibana's `tabify` happens to give us column names "1", "2", and "3".
@@ -76,6 +77,8 @@ define(function(require) {
           console.log(d);
           console.log("source: " + matrix.names[d.source.index]);
           console.log("destination: " + matrix.names[d.target.index]);
+          // TODO invoke onRibbonClickCallback
+          // onRibbonClickCallback(d);
         });
       ribbons.exit().remove();
 
@@ -157,6 +160,11 @@ define(function(require) {
 
       return matrix;
     }
+
+    // TODO expose render.onClick
+    // render.onRibbonClick = function (callback){
+    //   onRibbonClickCallback = callback;
+    // };
 
     return render;
   }
