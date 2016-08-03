@@ -16,8 +16,8 @@ define(function(require) {
         padAngle = 0.07,
         outerRadius = width / 2 - outerPadding,
         innerRadius = outerRadius - arcThickness,
-        labelPadding = 10;
-        // TODO onRibbonClickCallback = function (){};
+        labelPadding = 10,
+        onRibbonClickCallback = function (){};
 
     // These "column" variables represent keys in the row objects of the input table.
     // Kibana's `tabify` happens to give us column names "1", "2", and "3".
@@ -57,7 +57,7 @@ define(function(require) {
           .outerRadius(outerRadius);
 
     // Renders the given data as a chord diagram.
-    function render(data){
+    function my(data){
 
       // Pre-process the data and calculate the Chord Diagram layout.
       var matrix = generateMatrix(data),
@@ -74,11 +74,10 @@ define(function(require) {
         .style("stroke", "black")
         .style("stroke-opacity", 0.2)
         .on("mousedown", function (d){
-          console.log(d);
-          console.log("source: " + matrix.names[d.source.index]);
-          console.log("destination: " + matrix.names[d.target.index]);
-          // TODO invoke onRibbonClickCallback
-          // onRibbonClickCallback(d);
+          onRibbonClickCallback({
+            source: matrix.names[d.source.index],
+            destination: matrix.names[d.target.index]
+          });
         });
       ribbons.exit().remove();
 
@@ -161,11 +160,10 @@ define(function(require) {
       return matrix;
     }
 
-    // TODO expose render.onClick
-    // render.onRibbonClick = function (callback){
-    //   onRibbonClickCallback = callback;
-    // };
+    my.onRibbonClick = function (callback){
+      onRibbonClickCallback = callback;
+    };
 
-    return render;
+    return my;
   }
 });
