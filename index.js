@@ -16,14 +16,21 @@ module.exports = function(kibana) {
         method: "POST",
         handler: function(req, reply) {
 
+          // The payload can be expected to have the following properties:
+          //
+          // * d.index - Name of the ES index to query.
+          // * d.time - Parameters from the global Kibana time selector.
+          // * d.source - Value for the source of the clicked ribbon.
+          // * d.destination - Value for the destination of the clicked ribbon.
+          var d = req.payload;
+
           // Unpack the query parameters from the client.
           var index = req.payload.index;
           var time = req.payload.time;
 
-          // TODO include souce, dest
           // TODO include sourceField, destField from client Schema config
 
-          console.log(index, time);
+          console.log("d = " + JSON.stringify(d, null, 2));
 
           var options = {
             index: index,
@@ -33,16 +40,12 @@ module.exports = function(kibana) {
                   must: [
                     {
                       "term": {
-
-                        // TODO make this dynamic.
-                        "nuage_metadata.sourcepolicygroups": "PG5"
+                        "nuage_metadata.sourcepolicygroups": d.source
                       }
                     }, 
                     {
                       "term": {
-
-                        // TODO make this dynamic.
-                        "nuage_metadata.destinationpolicygroups": "PG3"
+                        "nuage_metadata.destinationpolicygroups": d.destination
                       }
                     }, 
                     {
