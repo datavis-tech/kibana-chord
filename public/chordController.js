@@ -43,13 +43,6 @@ define(function(require) {
     // Construct an instance of the HTML Table.
     var table = Table(tableContainer);
 
-    // Metadata for rendering the HTML table.
-    var columns = [
-      { title: "Chord Weight", property: "1" },
-      { title: "Chord Sources", property: "2" },
-      { title: "Chord Destinations", property: "3" }
-    ];
-
     // Converts hierarchical result set from ElasticSearch into a tabular form.
     // Returns an array of row objects, similar to the format returned by d3.csv.
     function tabify(response){
@@ -75,7 +68,12 @@ define(function(require) {
       chordDiagram(data);
 
       // Render the HTML Table.
-      table(data, columns);
+      table(data, [
+        { title: "Chord Weight", property: "1" },
+        { title: "Chord Sources", property: "2" },
+        { title: "Chord Destinations", property: "3" }
+      ]);
+
     });
 
     // Invoke our custom middleware for querying ElasticSearch
@@ -94,10 +92,20 @@ define(function(require) {
         .post("/api/kibana-chord", options)
         .then(function successCallback(response){
 
-          // TODO set the content of the table here.
-          // table(tabify(response), columns);
+          // Transform the response data into a form the table can use.
+          var data = response.data.hits.hits.map(function (d){
+            return d._source;
+          });
 
-          console.log(JSON.stringify(response.data));
+          // Render the HTML Table.
+          table(data, [
+            { title: "Source IP", property: "sourceip" },
+            { title: "Destination IP", property: "destinationip" },
+            { title: "Type", property: "type" },
+            { title: "Timestamp", property: "timestamp" },
+            { title: "Packets", property: "packets" }
+          ]);
+
         }, function errorCallback(response){
           throw response;
         });
