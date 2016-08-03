@@ -30,8 +30,6 @@ module.exports = function(kibana) {
 
           // TODO include sourceField, destField from client Schema config
 
-          console.log("d = " + JSON.stringify(d, null, 2));
-
           var options = {
             index: index,
             body: {
