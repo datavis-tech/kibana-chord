@@ -65,16 +65,12 @@ module.exports = function(kibana) {
             }
           };
 
+          // Execute the query and pass it to the client as JSON.
           server.plugins.elasticsearch
             .callWithRequest(req, "search", options)
             .then(function (response) {
               reply(JSON.stringify(response, null, 2));
             });
-
-          //reply([
-          //  "Source: " + req.params.source,
-          //  "Destination: " + req.params.destination
-          //].join("<br>"));
         }
       });
     }
