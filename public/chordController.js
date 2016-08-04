@@ -118,13 +118,19 @@ define(function(require) {
             // Format timestamp as human-readable date.
             d.timestamp = formatTime(new Date(d.timestamp));
 
+            // Add source and dest attribute to be used in table
+            d.source = d._source.nuage_metadata.sourcepolicygroups;
+            d.dest = d._source.nuage_metadata.destinationpolicygroups;
+
             return d;
           });
 
           // Render the HTML Table.
           table(data, [
             { title: "Source IP", property: "sourceip" },
-            { title: "Destination IP", property: "destinationip" },
+            { title: "Dest IP", property: "destinationip" },
+            { title: "Source PG", property: "source" },
+            { title: "Dest PG", property: "dest" },
             { title: "Type", property: "type" },
             { title: "Timestamp", property: "timestamp" },
             { title: "Packets", property: "packets" }
