@@ -70,15 +70,43 @@ define(function(require) {
           .data(chords);
       ribbons.enter().append("path").merge(ribbons)
         .attr("d", ribbon)
-        .style("fill", function(d) { return color(d.source.index); })
-        .style("opacity", 0.6)
+        .style("fill", function(d) {
+          return color(d.source.index);
+        })
+        .style("opacity", function (d){
+
+          // If there is a currently selected ribbon,
+          if(selectedRibbon){
+
+            // show the selected chord in full color,
+            if(
+              (selectedRibbon.sourceIndex === d.source.index)
+              &&
+              (selectedRibbon.targetIndex === d.target.index)
+            ){
+              return 1;
+            } else {
+
+              // and show all others faded out.
+              return 0.1;
+            }
+          } else {
+
+            // If there is no currently selected ribbon,
+            // then show all ribbons with slight transparency.
+            return 0.6;
+          }
+        })
         .style("stroke", "black")
         .style("stroke-opacity", 0.2)
         .on("mousedown", function (d){
           selectedRibbon = {
+            sourceIndex: d.source.index,
+            targetIndex: d.target.index,
             source: matrix.names[d.source.index],
             destination: matrix.names[d.target.index]
           };
+          my(data);
           onSelectedRibbonChangeCallback();
         });
       ribbons.exit().remove();
