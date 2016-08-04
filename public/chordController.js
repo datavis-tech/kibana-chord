@@ -112,8 +112,8 @@ define(function(require) {
             d.timestamp = formatTime(new Date(d.timestamp));
 
             // Add source and dest attribute to be used in table
-            d.source = d._source.nuage_metadata.sourcepolicygroups;
-            d.dest = d._source.nuage_metadata.destinationpolicygroups;
+            d.source = d.nuage_metadata.sourcepolicygroups;
+            d.dest = d.nuage_metadata.destinationpolicygroups;
 
             return d;
           });
