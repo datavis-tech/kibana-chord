@@ -21,3 +21,7 @@ export {
 export {
   arc
 } from "d3-shape";
+
+export {
+  timeFormat
+} from "d3-time-format";
