@@ -137,7 +137,6 @@ define(function(require) {
       // Used for both the arcs and the text labels.
       function chordGroupHover(selection){
         selection
-          .transition().duration(500)
           .on("mouseover", function (group){
             hoveredChordGroup = group;
             setRibbonOpacity(ribbons);
@@ -150,32 +149,17 @@ define(function(require) {
 
       // Sets the opacity values for all ribbons.
       function setRibbonOpacity(selection){
-        selection.style("opacity", function (d){
+        selection
+          .transition().duration(500)
+          .style("opacity", function (d){
 
-          // If there is a currently selected ribbon,
-          if(selectedRibbon){
+            // If there is a currently selected ribbon,
+            if(selectedRibbon){
 
-            // show the selected chord in full color,
-            if(
-              (selectedRibbon.sourceIndex === d.source.index) &&
-              (selectedRibbon.targetIndex === d.target.index)
-            ){
-              return defaultOpacity;
-            } else {
-
-              // and show all others faded out.
-              return 0.1;
-            }
-          } else {
-
-            // If there is no currently selected ribbon,
-            // then if there is a hovered chord group,
-            if(hoveredChordGroup){
-
-              // show the ribbons connected to the hovered chord group in full color,
+              // show the selected chord in full color,
               if(
-                (d.source.index === hoveredChordGroup.index) ||
-                (d.target.index === hoveredChordGroup.index)
+                (selectedRibbon.sourceIndex === d.source.index) &&
+                (selectedRibbon.targetIndex === d.target.index)
               ){
                 return defaultOpacity;
               } else {
@@ -185,11 +169,28 @@ define(function(require) {
               }
             } else {
 
-              // Otherwise show all ribbons with slight transparency.
-              return defaultOpacity;
+              // If there is no currently selected ribbon,
+              // then if there is a hovered chord group,
+              if(hoveredChordGroup){
+
+                // show the ribbons connected to the hovered chord group in full color,
+                if(
+                  (d.source.index === hoveredChordGroup.index) ||
+                  (d.target.index === hoveredChordGroup.index)
+                ){
+                  return defaultOpacity;
+                } else {
+
+                  // and show all others faded out.
+                  return 0.1;
+                }
+              } else {
+
+                // Otherwise show all ribbons with slight transparency.
+                return defaultOpacity;
+              }
             }
-          }
-        });
+          });
       }
     }
 
