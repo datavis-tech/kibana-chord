@@ -14,6 +14,10 @@ define(function(require) {
   var module = require("ui/modules").get("kibana-chord");
 
 
+  // Create a time formatter for the timestamp in the table.
+  var formatTime = d3.timeFormat("%B %d, %Y");
+
+
   // Register the controller with the Kibana plugin Angular module.
   module.controller("ChordController", function($scope, $rootScope, Private, $element, $http) {
 
@@ -94,7 +98,12 @@ define(function(require) {
 
           // Transform the response data into a form the table can use.
           var data = response.data.hits.hits.map(function (d){
-            return d._source;
+            d = d._source;
+
+            // Format timestamp as human-readable date.
+            d.timestamp = formatTime(new Date(d.timestamp));
+
+            return d;
           });
 
           // Render the HTML Table.
