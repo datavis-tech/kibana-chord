@@ -53,6 +53,12 @@ define(function(require) {
       var tabifyAggResponse = Private(require("ui/agg_response/tabify/tabify"));
       var tabified = tabifyAggResponse($scope.vis, response, { asAggConfigResults: true });
 
+      // Handle the case of a filter being applied in "Split Chart",
+      // which yields a nested data structure with the table one level deeper.
+      if("tables" in tabified.tables[0]){
+        tabified = tabified.tables[0];
+      }
+
       return tabified.tables[0].rows.map(function (array){
         var row = {};
         array.forEach(function (entry){
