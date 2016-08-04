@@ -32,6 +32,9 @@ module.exports = function(kibana) {
           var options = {
             index: index,
             body: {
+              sort: [
+                { "timestamp": { "order": "desc" } }
+              ],
               query: {
                 bool: {
                   must: [
