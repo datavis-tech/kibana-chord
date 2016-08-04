@@ -17,6 +17,7 @@ define(function(require) {
         outerRadius = width / 2 - outerPadding,
         innerRadius = outerRadius - arcThickness,
         labelPadding = 10,
+        defaultOpacity = 0.6,
         selectedRibbon = null,
         onSelectedRibbonChangeCallback = function (){};
 
@@ -68,37 +69,15 @@ define(function(require) {
       var ribbons = ribbonsG
         .selectAll("path")
           .data(chords);
-      ribbons.enter().append("path").merge(ribbons)
+      ribbons = ribbons.enter().append("path").merge(ribbons);
+      ribbons
         .attr("d", ribbon)
         .style("fill", function(d) {
           return color(d.source.index);
         })
-        .style("opacity", function (d){
-
-          // If there is a currently selected ribbon,
-          if(selectedRibbon){
-
-            // show the selected chord in full color,
-            if(
-              (selectedRibbon.sourceIndex === d.source.index)
-              &&
-              (selectedRibbon.targetIndex === d.target.index)
-            ){
-              return 1;
-            } else {
-
-              // and show all others faded out.
-              return 0.1;
-            }
-          } else {
-
-            // If there is no currently selected ribbon,
-            // then show all ribbons with slight transparency.
-            return 0.6;
-          }
-        })
         .style("stroke", "black")
         .style("stroke-opacity", 0.2)
+        .call(setRibbonOpacity)
         .on("mousedown", function (d){
           selectedRibbon = {
             sourceIndex: d.source.index,
@@ -106,8 +85,8 @@ define(function(require) {
             source: matrix.names[d.source.index],
             destination: matrix.names[d.target.index]
           };
-          my(data);
           onSelectedRibbonChangeCallback();
+          setRibbonOpacity(ribbons);
         });
       ribbons.exit().remove();
 
@@ -149,6 +128,33 @@ define(function(require) {
             return color(group.index);
           });
 
+      // Sets the opacity values for all ribbons.
+      function setRibbonOpacity(selection){
+        selection.style("opacity", function (d){
+
+          // If there is a currently selected ribbon,
+          if(selectedRibbon){
+
+            // show the selected chord in full color,
+            if(
+              (selectedRibbon.sourceIndex === d.source.index)
+              &&
+              (selectedRibbon.targetIndex === d.target.index)
+            ){
+              return defaultOpacity;
+            } else {
+
+              // and show all others faded out.
+              return 0.1;
+            }
+          } else {
+
+            // If there is no currently selected ribbon,
+            // then show all ribbons with slight transparency.
+            return defaultOpacity;
+          }
+        });
+      }
     }
 
     // Generates a matrix (2D array) from the given data, which is expected to
