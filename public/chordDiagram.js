@@ -120,6 +120,7 @@ define(function(require) {
           .text(function(d) {
             return matrix.names[d.index];
           })
+          .style("cursor", "default")
           .call(chordGroupHover);
 
       // Render the chord group arcs.
