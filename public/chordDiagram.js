@@ -17,7 +17,9 @@ define(function(require) {
         outerRadius = width / 2 - outerPadding,
         innerRadius = outerRadius - arcThickness,
         labelPadding = 10,
+        defaultOpacity = 0.6,
         selectedRibbon = null,
+        hoveredChordGroup = null,
         onSelectedRibbonChangeCallback = function (){};
 
     // These "column" variables represent keys in the row objects of the input table.
@@ -68,37 +70,15 @@ define(function(require) {
       var ribbons = ribbonsG
         .selectAll("path")
           .data(chords);
-      ribbons.enter().append("path").merge(ribbons)
+      ribbons = ribbons.enter().append("path").merge(ribbons);
+      ribbons
         .attr("d", ribbon)
         .style("fill", function(d) {
           return color(d.source.index);
         })
-        .style("opacity", function (d){
-
-          // If there is a currently selected ribbon,
-          if(selectedRibbon){
-
-            // show the selected chord in full color,
-            if(
-              (selectedRibbon.sourceIndex === d.source.index)
-              &&
-              (selectedRibbon.targetIndex === d.target.index)
-            ){
-              return 1;
-            } else {
-
-              // and show all others faded out.
-              return 0.1;
-            }
-          } else {
-
-            // If there is no currently selected ribbon,
-            // then show all ribbons with slight transparency.
-            return 0.6;
-          }
-        })
         .style("stroke", "black")
         .style("stroke-opacity", 0.2)
+        .call(setRibbonOpacity)
         .on("mousedown", function (d){
           selectedRibbon = {
             sourceIndex: d.source.index,
@@ -106,8 +86,8 @@ define(function(require) {
             source: matrix.names[d.source.index],
             destination: matrix.names[d.target.index]
           };
-          my(data);
           onSelectedRibbonChangeCallback();
+          setRibbonOpacity(ribbons);
         });
       ribbons.exit().remove();
 
@@ -139,7 +119,9 @@ define(function(require) {
           .attr("alignment-baseline", "central")
           .text(function(d) {
             return matrix.names[d.index];
-          });
+          })
+          .style("cursor", "default")
+          .call(chordGroupHover);
 
       // Render the chord group arcs.
       chordGroups
@@ -147,8 +129,69 @@ define(function(require) {
           .attr("d", arc)
           .style("fill", function(group) {
             return color(group.index);
-          });
+          })
+          .call(chordGroupHover);
 
+
+      // Sets up hover interaction to highlight a chord group.
+      // Used for both the arcs and the text labels.
+      function chordGroupHover(selection){
+        selection
+          .on("mouseover", function (group){
+            hoveredChordGroup = group;
+            setRibbonOpacity(ribbons);
+          })
+          .on("mouseout", function (){
+            hoveredChordGroup = null;
+            setRibbonOpacity(ribbons);
+          });
+      }
+
+      // Sets the opacity values for all ribbons.
+      function setRibbonOpacity(selection){
+        selection
+          .transition().duration(500)
+          .style("opacity", function (d){
+
+            // If there is a currently selected ribbon,
+            if(selectedRibbon){
+
+              // show the selected chord in full color,
+              if(
+                (selectedRibbon.sourceIndex === d.source.index) &&
+                (selectedRibbon.targetIndex === d.target.index)
+              ){
+                return defaultOpacity;
+              } else {
+
+                // and show all others faded out.
+                return 0.1;
+              }
+            } else {
+
+              // If there is no currently selected ribbon,
+              // then if there is a hovered chord group,
+              if(hoveredChordGroup){
+
+                // show the ribbons connected to the hovered chord group in full color,
+                if(
+                  (d.source.index === hoveredChordGroup.index) ||
+                  (d.target.index === hoveredChordGroup.index)
+                ){
+                  return defaultOpacity;
+                } else {
+
+                  // and show all others faded out.
+                  return 0.1;
+                }
+              } else {
+
+                // Otherwise show all ribbons with slight transparency.
+                return defaultOpacity;
+              }
+            }
+          });
+      }
     }
 
     // Generates a matrix (2D array) from the given data, which is expected to
