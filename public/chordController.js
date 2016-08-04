@@ -78,11 +78,11 @@ define(function(require) {
       chordDiagram(data);
 
       // Render the HTML Table.
-      table(data, [
-        { title: "Chord Weight", property: "1" },
-        { title: "Chord Sources", property: "2" },
-        { title: "Chord Destinations", property: "3" }
-      ]);
+      //table(data, [
+      //  { title: "Chord Weight", property: "1" },
+      //  { title: "Chord Sources", property: "2" },
+      //  { title: "Chord Destinations", property: "3" }
+      //]);
 
     });
 
