@@ -77,29 +77,36 @@ define(function(require) {
       // Render the Chord Diagram.
       chordDiagram(data);
 
+      // Update the table (if a ribbon is currently selected).
+      // This is invoked here to handle the case of auto-refresh.
+      if(chordDiagram.selectedRibbon()){
+        updateTable();
+      }
+
     });
 
-    // Invoke our custom middleware for querying ElasticSearch
-    // when the user clicks on the ribbon.
-    //
-    // The argument `options` has `source` and `destination` properties
-    // based on which ribbon was clicked.
-    chordDiagram.onRibbonClick(function (options){
-
-      // Add index and time to the options,
-      // which will be the HTTP POST payload.
-      options.index = $scope.vis.indexPattern.id;
+    // Updates the details table based on the selected chord.
+    function updateTable(){
+    
+      // Get the currently selected ribbon.
+      var selectedRibbon = chordDiagram.selectedRibbon();
 
       // Extract the time interval from the global timeFilter.
       var timeBounds = $rootScope.timefilter.getBounds();
 
-      // Specify the time query in epoch milliseconds.
-      options.time = {
-        gte: timeBounds.min.toDate().getTime(),
-        lte: timeBounds.max.toDate().getTime(),
-        format: "epoch_millis"
+      // Construct the HTTP POST payload for the query middleware.
+      var options = {
+        source: selectedRibbon.source,
+        destination: selectedRibbon.destination,
+        index: $scope.vis.indexPattern.id,
+        time: {
+          gte: timeBounds.min.toDate().getTime(),
+          lte: timeBounds.max.toDate().getTime(),
+          format: "epoch_millis"
+        }
       };
 
+      // Invoke the query middleware, then render it into the table.
       $http
         .post("/api/kibana-chord", options)
         .then(function successCallback(response){
@@ -132,6 +139,10 @@ define(function(require) {
         }, function errorCallback(response){
           throw response;
         });
-    });
+    }
+
+    // Invoke our custom middleware for querying ElasticSearch
+    // when the user clicks on the ribbon.
+    chordDiagram.onSelectedRibbonChange(updateTable);
   });
 });
