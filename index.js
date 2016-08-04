@@ -29,7 +29,6 @@ module.exports = function(kibana) {
           var time = req.payload.time;
 
           // TODO include sourceField, destField from client Schema config
-
           var options = {
             index: index,
             body: {
@@ -48,13 +47,7 @@ module.exports = function(kibana) {
                     }, 
                     {
                       "range": {
-
-                        // TODO make this dynamic.
-                        "timestamp": {
-                          "gte": "now-1y/y",
-                          "lte": "now/y",
-                          "format": "epoch_millis"
-                        }
+                        "timestamp": time
                       }
                     }
                   ]
