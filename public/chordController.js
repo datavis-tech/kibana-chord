@@ -77,6 +77,12 @@ define(function(require) {
       // Render the Chord Diagram.
       chordDiagram(data);
 
+      // Update the table (if a ribbon is currently selected).
+      // This is invoked here to handle the case of auto-refresh.
+      if(chordDiagram.selectedRibbon()){
+        updateTable();
+      }
+
     });
 
     // Updates the details table based on the selected chord.
