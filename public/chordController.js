@@ -15,7 +15,7 @@ define(function(require) {
 
 
   // Create a time formatter for the timestamp in the table.
-  var formatTime = d3.timeFormat("%B %d, %Y");
+  var formatTime = d3.timeFormat("%B %d, %Y %X");
 
 
   // Register the controller with the Kibana plugin Angular module.
