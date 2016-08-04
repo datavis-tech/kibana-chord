@@ -74,7 +74,11 @@ define(function(require) {
           return color(d.source.index);
         })
         .style("opacity", function (d){
+
+          // If there is a currently selected ribbon,
           if(selectedRibbon){
+
+            // show the selected chord in full color,
             if(
               (selectedRibbon.sourceIndex === d.source.index)
               &&
@@ -82,9 +86,14 @@ define(function(require) {
             ){
               return 1;
             } else {
+
+              // and show all others faded out.
               return 0.1;
             }
           } else {
+
+            // If there is no currently selected ribbon,
+            // then show all ribbons with slight transparency.
             return 0.6;
           }
         })
