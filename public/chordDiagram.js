@@ -173,7 +173,7 @@ define(function(require) {
 
               // show the ribbons connected to the hovered chord group in full color,
               if(
-                (d.source.index === hoveredChordGroup.index) &&
+                (d.source.index === hoveredChordGroup.index) ||
                 (d.target.index === hoveredChordGroup.index)
               ){
                 return defaultOpacity;
