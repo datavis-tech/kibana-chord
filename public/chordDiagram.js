@@ -137,6 +137,7 @@ define(function(require) {
       // Used for both the arcs and the text labels.
       function chordGroupHover(selection){
         selection
+          .transition().duration(500)
           .on("mouseover", function (group){
             hoveredChordGroup = group;
             setRibbonOpacity(ribbons);
