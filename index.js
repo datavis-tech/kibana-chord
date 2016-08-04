@@ -28,10 +28,7 @@ module.exports = function(kibana) {
           var index = req.payload.index;
           var time = req.payload.time;
 
-          console.log(JSON.stringify(time, null, 2));
-
           // TODO include sourceField, destField from client Schema config
-
           var options = {
             index: index,
             body: {
@@ -50,8 +47,6 @@ module.exports = function(kibana) {
                     }, 
                     {
                       "range": {
-
-                        // TODO make this dynamic.
                         "timestamp": time
                       }
                     }

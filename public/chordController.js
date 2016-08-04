@@ -90,7 +90,16 @@ define(function(require) {
       // Add index and time to the options,
       // which will be the HTTP POST payload.
       options.index = $scope.vis.indexPattern.id;
-      options.time = $rootScope.timefilter.time;
+
+      // Extract the time interval from the global timeFilter.
+      var timeBounds = $rootScope.timefilter.getBounds();
+
+      // Specify the time query in epoch milliseconds.
+      options.time = {
+        gte: timeBounds.min.toDate().getTime(),
+        lte: timeBounds.max.toDate().getTime(),
+        format: "epoch_millis"
+      };
 
       $http
         .post("/api/kibana-chord", options)
