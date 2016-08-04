@@ -70,15 +70,34 @@ define(function(require) {
           .data(chords);
       ribbons.enter().append("path").merge(ribbons)
         .attr("d", ribbon)
-        .style("fill", function(d) { return color(d.source.index); })
-        .style("opacity", 0.6)
+        .style("fill", function(d) {
+          return color(d.source.index);
+        })
+        .style("opacity", function (d){
+          if(selectedRibbon){
+            if(
+              (selectedRibbon.sourceIndex === d.source.index)
+              &&
+              (selectedRibbon.targetIndex === d.target.index)
+            ){
+              return 1;
+            } else {
+              return 0.1;
+            }
+          } else {
+            return 0.6;
+          }
+        })
         .style("stroke", "black")
         .style("stroke-opacity", 0.2)
         .on("mousedown", function (d){
           selectedRibbon = {
+            sourceIndex: d.source.index,
+            targetIndex: d.target.index,
             source: matrix.names[d.source.index],
             destination: matrix.names[d.target.index]
           };
+          my(data);
           onSelectedRibbonChangeCallback();
         });
       ribbons.exit().remove();
