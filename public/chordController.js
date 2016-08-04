@@ -77,13 +77,6 @@ define(function(require) {
       // Render the Chord Diagram.
       chordDiagram(data);
 
-      // Render the HTML Table.
-      //table(data, [
-      //  { title: "Chord Weight", property: "1" },
-      //  { title: "Chord Sources", property: "2" },
-      //  { title: "Chord Destinations", property: "3" }
-      //]);
-
     });
 
     // Invoke our custom middleware for querying ElasticSearch
