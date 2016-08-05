@@ -91,6 +91,13 @@ define(function(require) {
         });
       ribbons.exit().remove();
 
+      svg.on("click", function (){
+        console.log("Click");
+        selectedRibbon = null;
+        onSelectedRibbonChangeCallback();
+        setRibbonOpacity(ribbons);
+      });
+
       // Scaffold the chord groups.
       var chordGroups = chordGroupsG.selectAll("g").data(chords.groups);
       var chordGroupsEnter = chordGroups.enter().append("g");
