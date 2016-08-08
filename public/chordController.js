@@ -83,8 +83,11 @@ define(function(require) {
         // Tabify the response.
         var data = tabify(response);
 
+        // Pass the fresh data into the Chord Diagram.
+        chordDiagram.data(data);
+
         // Render the Chord Diagram.
-        chordDiagram(data);
+        chordDiagram();
 
         // Update the table (if a ribbon is currently selected).
         // This is invoked here to handle the case of auto-refresh.
