@@ -21,6 +21,9 @@ define(function(require) {
   // Register the controller with the Kibana plugin Angular module.
   module.controller("ChordController", function($scope, $rootScope, Private, $element, $http) {
 
+    // Inject the tabify utility from Kibana internals.
+    var tabifyAggResponse = Private(require("ui/agg_response/tabify/tabify"));
+
     // Access the DOM element provided by Angular's dependency injection.
     var div = $element[0];
 
@@ -50,8 +53,10 @@ define(function(require) {
     // Converts hierarchical result set from ElasticSearch into a tabular form.
     // Returns an array of row objects, similar to the format returned by d3.csv.
     function tabify(response){
-      var tabifyAggResponse = Private(require("ui/agg_response/tabify/tabify"));
-      var tabified = tabifyAggResponse($scope.vis, response, { asAggConfigResults: true });
+
+      var tabified = tabifyAggResponse($scope.vis, response, {
+        asAggConfigResults: true
+      });
 
       // Handle the case of a filter being applied in "Split Chart",
       // which yields a nested data structure with the table one level deeper.
