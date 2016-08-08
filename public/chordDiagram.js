@@ -84,14 +84,12 @@ define(function(require) {
           .style("stroke-opacity", 0.2)
           .call(setRibbonOpacity)
           .on("mousedown", function (d){
-            selectedRibbon = {
+            my.selectedRibbon({
               sourceIndex: d.source.index,
               targetIndex: d.target.index,
               source: matrix.names[d.source.index],
               destination: matrix.names[d.target.index]
-            };
-            onSelectedRibbonChangeCallback();
-            setRibbonOpacity(ribbons);
+            });
           });
         ribbons.exit().remove();
 
@@ -242,8 +240,14 @@ define(function(require) {
       onSelectedRibbonChangeCallback = callback;
     };
 
-    my.selectedRibbon = function (){
-      return selectedRibbon;
+    my.selectedRibbon = function (_){
+      if(_){
+        selectedRibbon = _;
+        onSelectedRibbonChangeCallback();
+        my();
+      } else {
+        return selectedRibbon;
+      }
     };
 
     my.data = function (_){
