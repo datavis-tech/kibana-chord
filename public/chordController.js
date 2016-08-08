@@ -153,6 +153,12 @@ define(function(require) {
           }, function errorCallback(response){
             throw response;
           });
+      } else {
+
+        // If there is no selected ribbon,
+        // then any existing table should be cleared.
+        table([], []);
+
       }
     }
 
