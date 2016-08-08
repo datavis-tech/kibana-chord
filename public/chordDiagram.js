@@ -9,8 +9,8 @@ define(function(require) {
   return function ChordDiagram(div){
 
     // Configuration parameters.
-    var width = 500,
-        height = 500,
+    var width = 450,
+        height = 450,
         outerPadding = 50,
         arcThickness = 20,
         padAngle = 0.07,
