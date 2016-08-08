@@ -76,18 +76,22 @@ define(function(require) {
     // Update the visualization with new data as the query response changes.
     $scope.$watch("esResponse", function(response) {
 
-      // Tabify the response.
-      var data = tabify(response);
+      // Guard against undefined value, which always occurs
+      // after the plugin is loaded and before the data gets loaded.
+      if(response){
 
-      // Render the Chord Diagram.
-      chordDiagram(data);
+        // Tabify the response.
+        var data = tabify(response);
 
-      // Update the table (if a ribbon is currently selected).
-      // This is invoked here to handle the case of auto-refresh.
-      if(chordDiagram.selectedRibbon()){
-        updateTable();
+        // Render the Chord Diagram.
+        chordDiagram(data);
+
+        // Update the table (if a ribbon is currently selected).
+        // This is invoked here to handle the case of auto-refresh.
+        if(chordDiagram.selectedRibbon()){
+          updateTable();
+        }
       }
-
     });
 
     // Updates the details table based on the selected chord.
