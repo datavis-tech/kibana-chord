@@ -20,6 +20,7 @@ define(function(require) {
         defaultOpacity = 0.6,
         selectedRibbon = null,
         hoveredChordGroup = null,
+        data = null,
         onSelectedRibbonChangeCallback = function (){};
 
     // These "column" variables represent keys in the row objects of the input table.
@@ -43,10 +44,16 @@ define(function(require) {
     var svg = d3.select(div).append("svg")
           .attr("width", width)
           .attr("height", height),
-        g = svg.append("g")
+        g = svg.append("g"),
+        backgroundRect = g.append("rect")
+          .attr("width", width)
+          .attr("height", height)
+          .attr("fill", "none")
+          .style("pointer-events", "all"),
+        ribbonsG = g.append("g")
           .attr("transform", "translate(" + width / 2 + "," + height / 2 + ")"),
-        ribbonsG = g.append("g"),
-        chordGroupsG = g.append("g");
+        chordGroupsG = g.append("g")
+          .attr("transform", "translate(" + width / 2 + "," + height / 2 + ")");
 
     // D3 layouts, shapes and scales.
     var ribbon = d3.ribbon()
@@ -59,124 +66,114 @@ define(function(require) {
           .innerRadius(innerRadius)
           .outerRadius(outerRadius);
 
+    // Clear the selected ribbon when clicking on
+    // any area other than on a ribbon.
+    backgroundRect.on("mousedown", function (){
+      my.selectedRibbon(null);
+    });
+
     // Renders the given data as a chord diagram.
-    function my(data){
+    function my(){
+    
+      // Use the data passed into the .data() accessor.
+      if(data){
 
-      // Pre-process the data and calculate the Chord Diagram layout.
-      var matrix = generateMatrix(data),
-          chords = chord(matrix);
+        // Pre-process the data and calculate the Chord Diagram layout.
+        var matrix = generateMatrix(data),
+            chords = chord(matrix);
 
-      // Render the ribbons of the Chord Diagram (the connecting fibers inside the circle).
-      var ribbons = ribbonsG
-        .selectAll("path")
-          .data(chords);
-      ribbons = ribbons.enter().append("path").merge(ribbons);
-      ribbons
-        .attr("d", ribbon)
-        .style("fill", function(d) {
-          return color(d.source.index);
-        })
-        .style("stroke", "black")
-        .style("stroke-opacity", 0.2)
-        .call(setRibbonOpacity)
-        .on("mousedown", function (d){
-          selectedRibbon = {
-            sourceIndex: d.source.index,
-            targetIndex: d.target.index,
-            source: matrix.names[d.source.index],
-            destination: matrix.names[d.target.index]
-          };
-          onSelectedRibbonChangeCallback();
-          setRibbonOpacity(ribbons);
-        });
-      ribbons.exit().remove();
-
-      // Scaffold the chord groups.
-      var chordGroups = chordGroupsG.selectAll("g").data(chords.groups);
-      var chordGroupsEnter = chordGroups.enter().append("g");
-      chordGroupsEnter.append("text");
-      chordGroupsEnter.append("path");
-      chordGroups.exit().remove();
-      chordGroups = chordGroups.merge(chordGroupsEnter);
-
-      // Add labels
-      chordGroups
-        .select("text")
-          .each(function(d) {
-            angle.set(this, (d.startAngle + d.endAngle) / 2);
-            flip.set(this, angle.get(this) > Math.PI);
+        // Render the ribbons of the Chord Diagram (the connecting fibers inside the circle).
+        var ribbons = ribbonsG
+          .selectAll("path")
+            .data(chords);
+        ribbons = ribbons.enter().append("path").merge(ribbons);
+        ribbons
+          .attr("d", ribbon)
+          .style("fill", function(d) {
+            return color(d.source.index);
           })
-          .attr("transform", function(d) {
-            return [
-              "rotate(" + (angle.get(this) / Math.PI * 180 - 90) + ")",
-              "translate(" + (outerRadius + labelPadding) + ")",
-              flip.get(this) ? "rotate(180)" : ""
-            ].join("");
-          })
-          .attr("text-anchor", function(d) {
-            return flip.get(this) ? "end" : "start";
-          })
-          .attr("alignment-baseline", "central")
-          .text(function(d) {
-            return matrix.names[d.index];
-          })
-          .style("cursor", "default")
-          .call(chordGroupHover);
-
-      // Render the chord group arcs.
-      chordGroups
-        .select("path")
-          .attr("d", arc)
-          .style("fill", function(group) {
-            return color(group.index);
-          })
-          .call(chordGroupHover);
-
-
-      // Sets up hover interaction to highlight a chord group.
-      // Used for both the arcs and the text labels.
-      function chordGroupHover(selection){
-        selection
-          .on("mouseover", function (group){
-            hoveredChordGroup = group;
-            setRibbonOpacity(ribbons);
-          })
-          .on("mouseout", function (){
-            hoveredChordGroup = null;
-            setRibbonOpacity(ribbons);
+          .style("stroke", "black")
+          .style("stroke-opacity", 0.2)
+          .call(setRibbonOpacity)
+          .on("mousedown", function (d){
+            my.selectedRibbon({
+              sourceIndex: d.source.index,
+              targetIndex: d.target.index,
+              source: matrix.names[d.source.index],
+              destination: matrix.names[d.target.index]
+            });
           });
-      }
+        ribbons.exit().remove();
 
-      // Sets the opacity values for all ribbons.
-      function setRibbonOpacity(selection){
-        selection
-          .transition().duration(500)
-          .style("opacity", function (d){
+        // Scaffold the chord groups.
+        var chordGroups = chordGroupsG.selectAll("g").data(chords.groups);
+        var chordGroupsEnter = chordGroups.enter().append("g");
+        chordGroupsEnter.append("text");
+        chordGroupsEnter.append("path");
+        chordGroups.exit().remove();
+        chordGroups = chordGroups.merge(chordGroupsEnter);
 
-            // If there is a currently selected ribbon,
-            if(selectedRibbon){
+        // Add labels
+        chordGroups
+          .select("text")
+            .each(function(d) {
+              angle.set(this, (d.startAngle + d.endAngle) / 2);
+              flip.set(this, angle.get(this) > Math.PI);
+            })
+            .attr("transform", function(d) {
+              return [
+                "rotate(" + (angle.get(this) / Math.PI * 180 - 90) + ")",
+                "translate(" + (outerRadius + labelPadding) + ")",
+                flip.get(this) ? "rotate(180)" : ""
+              ].join("");
+            })
+            .attr("text-anchor", function(d) {
+              return flip.get(this) ? "end" : "start";
+            })
+            .attr("alignment-baseline", "central")
+            .text(function(d) {
+              return matrix.names[d.index];
+            })
+            .style("cursor", "default")
+            .call(chordGroupHover);
 
-              // show the selected chord in full color,
-              if(
-                (selectedRibbon.sourceIndex === d.source.index) &&
-                (selectedRibbon.targetIndex === d.target.index)
-              ){
-                return defaultOpacity;
-              } else {
+        // Render the chord group arcs.
+        chordGroups
+          .select("path")
+            .attr("d", arc)
+            .style("fill", function(group) {
+              return color(group.index);
+            })
+            .call(chordGroupHover);
 
-                // and show all others faded out.
-                return 0.1;
-              }
-            } else {
 
-              // If there is no currently selected ribbon,
-              // then if there is a hovered chord group,
-              if(hoveredChordGroup){
+        // Sets up hover interaction to highlight a chord group.
+        // Used for both the arcs and the text labels.
+        function chordGroupHover(selection){
+          selection
+            .on("mouseover", function (group){
+              hoveredChordGroup = group;
+              setRibbonOpacity(ribbons);
+            })
+            .on("mouseout", function (){
+              hoveredChordGroup = null;
+              setRibbonOpacity(ribbons);
+            });
+        }
 
-                // show the ribbons connected to the hovered chord group in full color,
+        // Sets the opacity values for all ribbons.
+        function setRibbonOpacity(selection){
+          selection
+            .transition().duration(500)
+            .style("opacity", function (d){
+
+              // If there is a currently selected ribbon,
+              if(selectedRibbon){
+
+                // show the selected chord in full color,
                 if(
-                  (d.source.index === hoveredChordGroup.index) ||
-                  (d.target.index === hoveredChordGroup.index)
+                  (selectedRibbon.sourceIndex === d.source.index) &&
+                  (selectedRibbon.targetIndex === d.target.index)
                 ){
                   return defaultOpacity;
                 } else {
@@ -186,11 +183,29 @@ define(function(require) {
                 }
               } else {
 
-                // Otherwise show all ribbons with slight transparency.
-                return defaultOpacity;
+                // If there is no currently selected ribbon,
+                // then if there is a hovered chord group,
+                if(hoveredChordGroup){
+
+                  // show the ribbons connected to the hovered chord group in full color,
+                  if(
+                    (d.source.index === hoveredChordGroup.index) ||
+                    (d.target.index === hoveredChordGroup.index)
+                  ){
+                    return defaultOpacity;
+                  } else {
+
+                    // and show all others faded out.
+                    return 0.1;
+                  }
+                } else {
+
+                  // Otherwise show all ribbons with slight transparency.
+                  return defaultOpacity;
+                }
               }
-            }
-          });
+            });
+        }
       }
     }
 
@@ -237,9 +252,19 @@ define(function(require) {
       onSelectedRibbonChangeCallback = callback;
     };
 
-    my.selectedRibbon = function (){
-      return selectedRibbon;
+    my.selectedRibbon = function (_){
+      if(typeof _ !== "undefined"){
+        selectedRibbon = _;
+        onSelectedRibbonChangeCallback();
+        my();
+      } else {
+        return selectedRibbon;
+      }
     };
+
+    my.data = function (_){
+      data = _;
+    }
 
     return my;
   }
