@@ -103,54 +103,57 @@ define(function(require) {
       // Get the currently selected ribbon.
       var selectedRibbon = chordDiagram.selectedRibbon();
 
-      // Extract the time interval from the global timeFilter.
-      var timeBounds = $rootScope.timefilter.getBounds();
+      if(selectedRibbon){
 
-      // Construct the HTTP POST payload for the query middleware.
-      var options = {
-        source: selectedRibbon.source,
-        destination: selectedRibbon.destination,
-        index: $scope.vis.indexPattern.id,
-        time: {
-          gte: timeBounds.min.toDate().getTime(),
-          lte: timeBounds.max.toDate().getTime(),
-          format: "epoch_millis"
-        }
-      };
+        // Extract the time interval from the global timeFilter.
+        var timeBounds = $rootScope.timefilter.getBounds();
 
-      // Invoke the query middleware, then render it into the table.
-      $http
-        .post("/api/kibana-chord", options)
-        .then(function successCallback(response){
+        // Construct the HTTP POST payload for the query middleware.
+        var options = {
+          source: selectedRibbon.source,
+          destination: selectedRibbon.destination,
+          index: $scope.vis.indexPattern.id,
+          time: {
+            gte: timeBounds.min.toDate().getTime(),
+            lte: timeBounds.max.toDate().getTime(),
+            format: "epoch_millis"
+          }
+        };
 
-          // Transform the response data into a form the table can use.
-          var data = response.data.hits.hits.map(function (d){
-            d = d._source;
+        // Invoke the query middleware, then render it into the table.
+        $http
+          .post("/api/kibana-chord", options)
+          .then(function successCallback(response){
 
-            // Format timestamp as human-readable date.
-            d.timestamp = formatTime(new Date(d.timestamp));
+            // Transform the response data into a form the table can use.
+            var data = response.data.hits.hits.map(function (d){
+              d = d._source;
 
-            // Add source and dest attribute to be used in table
-            d.source = d.nuage_metadata.sourcepolicygroups;
-            d.dest = d.nuage_metadata.destinationpolicygroups;
+              // Format timestamp as human-readable date.
+              d.timestamp = formatTime(new Date(d.timestamp));
 
-            return d;
+              // Add source and dest attribute to be used in table
+              d.source = d.nuage_metadata.sourcepolicygroups;
+              d.dest = d.nuage_metadata.destinationpolicygroups;
+
+              return d;
+            });
+
+            // Render the HTML Table.
+            table(data, [
+              { title: "Source IP", property: "sourceip" },
+              { title: "Dest IP", property: "destinationip" },
+              { title: "Source PG", property: "source" },
+              { title: "Dest PG", property: "dest" },
+              { title: "Type", property: "type" },
+              { title: "Timestamp", property: "timestamp" },
+              { title: "Packets", property: "packets" }
+            ]);
+
+          }, function errorCallback(response){
+            throw response;
           });
-
-          // Render the HTML Table.
-          table(data, [
-            { title: "Source IP", property: "sourceip" },
-            { title: "Dest IP", property: "destinationip" },
-            { title: "Source PG", property: "source" },
-            { title: "Dest PG", property: "dest" },
-            { title: "Type", property: "type" },
-            { title: "Timestamp", property: "timestamp" },
-            { title: "Packets", property: "packets" }
-          ]);
-
-        }, function errorCallback(response){
-          throw response;
-        });
+      }
     }
 
     // Invoke our custom middleware for querying ElasticSearch

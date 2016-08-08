@@ -44,10 +44,16 @@ define(function(require) {
     var svg = d3.select(div).append("svg")
           .attr("width", width)
           .attr("height", height),
-        g = svg.append("g")
+        g = svg.append("g"),
+        backgroundRect = g.append("rect")
+          .attr("width", width)
+          .attr("height", height)
+          .attr("fill", "none")
+          .style("pointer-events", "all"),
+        ribbonsG = g.append("g")
           .attr("transform", "translate(" + width / 2 + "," + height / 2 + ")"),
-        ribbonsG = g.append("g"),
-        chordGroupsG = g.append("g");
+        chordGroupsG = g.append("g")
+          .attr("transform", "translate(" + width / 2 + "," + height / 2 + ")");
 
     // D3 layouts, shapes and scales.
     var ribbon = d3.ribbon()
@@ -59,6 +65,12 @@ define(function(require) {
         arc = d3.arc()
           .innerRadius(innerRadius)
           .outerRadius(outerRadius);
+
+    // Clear the selected ribbon when clicking on
+    // any area other than on a ribbon.
+    backgroundRect.on("mousedown", function (){
+      my.selectedRibbon(null);
+    });
 
     // Renders the given data as a chord diagram.
     function my(){
@@ -241,7 +253,7 @@ define(function(require) {
     };
 
     my.selectedRibbon = function (_){
-      if(_){
+      if(typeof _ !== "undefined"){
         selectedRibbon = _;
         onSelectedRibbonChangeCallback();
         my();
