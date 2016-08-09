@@ -146,7 +146,7 @@ define(function(require) {
           .select("path")
             .attr("d", arc)
             .style("fill", function(group) {
-              return color(group.index);
+              return color(matrix.names[group.index]);
             })
             .call(chordGroupHover);
 
