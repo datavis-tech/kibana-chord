@@ -252,6 +252,14 @@ define(function(require) {
       onSelectedRibbonChangeCallback = callback;
     };
 
+    // Gets or sets the selected ribbon object,
+    // which can be expected to be null
+    // or an object with the following fields:
+    //
+    //  * sourceIndex - The matrix index of the source chord group.
+    //  * targetIndex - The matrix index of the destination chord group.
+    //  * source - The source name (data value).
+    //  * destination - The destination name (data value).
     my.selectedRibbon = function (_){
       if(typeof _ !== "undefined"){
         selectedRibbon = _;
