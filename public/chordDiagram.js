@@ -126,13 +126,17 @@ define(function(require) {
         chordGroups.exit().remove();
         chordGroups = chordGroups.merge(chordGroupsEnter);
 
-        // Add labels
+        // Compute locals.
         chordGroups
           .select("text")
             .each(function(group) {
               angle.set(this, (group.startAngle + group.endAngle) / 2);
               flip.set(this, angle.get(this) > Math.PI);
             })
+
+        // Add labels
+        chordGroups
+          .select("text")
             .attr("transform", function() {
               return [
                 "rotate(" + (angle.get(this) / Math.PI * 180 - 90) + ")",
