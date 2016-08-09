@@ -94,7 +94,7 @@ define(function(require) {
         ribbons
           .attr("d", ribbon)
           .style("fill", function(d) {
-            return color(d.source.index);
+            return color(matrix.names[d.source.index]);
           })
           .style("stroke", "black")
           .style("stroke-opacity", 0.2)
