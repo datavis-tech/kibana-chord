@@ -60,11 +60,20 @@ define(function(require) {
           .radius(innerRadius),
         chord = d3.chord()
           .padAngle(padAngle),
-        color = d3.scaleOrdinal()
-          .range(d3.schemeCategory20),
+        color = d3.scaleOrdinal(),
         arc = d3.arc()
           .innerRadius(innerRadius)
           .outerRadius(outerRadius);
+
+    // Compute a color scheme from d3.schemeCategory20 such that
+    // distinct dark colors come first, then light colors later.
+    var darkColors = d3.schemeCategory20.filter(function(d, i){
+      return i % 2 - 1;
+    });
+    var lightColors = d3.schemeCategory20.filter(function(d, i){
+      return i % 2;
+    });
+    color.range(darkColors.concat(lightColors));
 
     // Clear the selected ribbon when clicking on
     // any area other than on a ribbon.
