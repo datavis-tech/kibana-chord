@@ -148,6 +148,18 @@ define(function(require) {
               return matrix.names[d.index];
             })
             .style("cursor", "default")
+            .style("font-weight", function(d){
+              if(selectedRibbon &&
+                (
+                  (selectedRibbon.sourceIndex === d.index) ||
+                  (selectedRibbon.targetIndex === d.index)
+                )
+              ){
+                return "bold";
+              } else {
+                return "normal";
+              }
+            })
             .call(chordGroupHover);
 
         // Render the chord group arcs.
