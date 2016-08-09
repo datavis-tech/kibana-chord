@@ -82,9 +82,9 @@ define(function(require) {
         var matrix = generateMatrix(data),
             chords = chord(matrix);
 
-        var sortedNames = matrix.names.slice().sort();
-
-        console.log(sortedNames);
+        // Use alphanumerically sorted source and destination names
+        // for the color scale domain for consistent colors across refreshes.
+        color.domain(matrix.names.slice().sort());
 
         // Render the ribbons of the Chord Diagram (the connecting fibers inside the circle).
         var ribbons = ribbonsG
