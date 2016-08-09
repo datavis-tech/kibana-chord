@@ -105,7 +105,7 @@ define(function(require) {
 
         // Update the table header.
         tableHeaderContainer.text(
-          "Flow between " + selectedRibbon.source +
+          "Flows between " + selectedRibbon.source +
           " and " + selectedRibbon.destination
         );
 
