@@ -14,10 +14,16 @@ define(function(require) {
         outerPadding = 50,
         arcThickness = 20,
         padAngle = 0.07,
+        labelPadding = 10,
+
+        // Opacity values common to ribbons and arcs
+        // depending on whether or not they are selected.
+        defaultOpacity = 0.6,
+        fadedOpacity = 0.1,
+
         outerRadius = width / 2 - outerPadding,
         innerRadius = outerRadius - arcThickness,
-        labelPadding = 10,
-        defaultOpacity = 0.6,
+
         selectedRibbon = null,
         hoveredChordGroup = null,
         data = null,
@@ -137,20 +143,19 @@ define(function(require) {
 
         // Compute locals.
         chordGroups
-          .select("text")
-            .each(function(group) {
+          .each(function(group) {
 
-              angle.set(this, (group.startAngle + group.endAngle) / 2);
+            angle.set(this, (group.startAngle + group.endAngle) / 2);
 
-              flip.set(this, angle.get(this) > Math.PI);
+            flip.set(this, angle.get(this) > Math.PI);
 
-              selected.set(this, selectedRibbon &&
-                (
-                  (selectedRibbon.sourceIndex === group.index) ||
-                  (selectedRibbon.targetIndex === group.index)
-                )
-              );
-            })
+            selected.set(this, selectedRibbon &&
+              (
+                (selectedRibbon.sourceIndex === group.index) ||
+                (selectedRibbon.targetIndex === group.index)
+              )
+            );
+          })
 
         // Add labels
         chordGroups
@@ -171,7 +176,7 @@ define(function(require) {
             })
             .style("cursor", "default")
             .style("font-weight", function(group){
-              return selected.get(this) ? "bold" : "normal";
+              return selected.get(this.parentNode) ? "bold" : "normal";
             })
             .call(chordGroupHover);
 
@@ -181,6 +186,9 @@ define(function(require) {
             .attr("d", arc)
             .style("fill", function(group) {
               return color(matrix.names[group.index]);
+            })
+            .style("opacity", function(group){
+              return selected.get(this.parentNode) ? defaultOpacity : fadedOpacity;
             })
             .call(chordGroupHover);
 
@@ -217,7 +225,7 @@ define(function(require) {
                 } else {
 
                   // and show all others faded out.
-                  return 0.1;
+                  return fadedOpacity;
                 }
               } else {
 
@@ -234,7 +242,7 @@ define(function(require) {
                   } else {
 
                     // and show all others faded out.
-                    return 0.1;
+                    return fadedOpacity;
                   }
                 } else {
 
