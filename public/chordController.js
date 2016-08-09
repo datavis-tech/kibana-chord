@@ -28,27 +28,29 @@ define(function(require) {
     var div = $element[0];
 
     // Construct a Bootstrap Grid to position the Chord Diagram and Table.
-    var container = d3.select(div)
-            .style("width", "100%")
-          .append("div")
-            .attr("class", "container-fluid")
-          .append("div")
-            .attr("class", "row"),
-        chordContainer = container
-          .append("div")
-            .attr("class", "col-md-6")
-            .node(),
-        tableContainer = container
-          .append("div")
-            .attr("class", "col-md-6")
-            .node();
+    var container = d3.select(div).style("width", "100%")
+          .append("div").attr("class", "container-fluid")
+          .append("div").attr("class", "row"),
+        chordContainer = container.append("div")
+          .attr("class", "col-md-6").node(),
+        tableContainer = container.append("div")
+          .attr("class", "col-md-6");
 
+    // These two divs will go in the column to the right.
+    var tableHeaderContainer = tableContainer
+          .append("div"),
+        tableBodyContainer = tableContainer
+          .append("div").node();
+
+    // TODO change this.
+    // A placeholder header.
+    tableHeaderContainer.text("Flow between X and Y");
 
     // Construct an instance of the Chord Diagram.
     var chordDiagram = ChordDiagram(chordContainer);
 
     // Construct an instance of the HTML Table.
-    var table = Table(tableContainer);
+    var table = Table(tableBodyContainer);
 
     // Converts hierarchical result set from ElasticSearch into a tabular form.
     // Returns an array of row objects, similar to the format returned by d3.csv.
