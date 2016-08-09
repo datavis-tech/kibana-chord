@@ -166,11 +166,11 @@ define(function(require) {
           selection
             .on("mouseover", function (group){
               hoveredChordGroup = group;
-              setRibbonOpacity(ribbons);
+              my();
             })
             .on("mouseout", function (){
               hoveredChordGroup = null;
-              setRibbonOpacity(ribbons);
+              my();
             });
         }
 
