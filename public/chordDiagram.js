@@ -35,10 +35,19 @@ define(function(require) {
         source = function (d){ return d[chordSourceColumn]; },
         destination = function (d){ return d[chordDestinationColumn]; };
 
-    // D3 Local objects for DOM-local storage of label angles and
-    // whether or not labels should be flipped upside-down.
-    var angle = d3.local(),
-        flip = d3.local();
+    // D3 Local objects for DOM-local storage.
+    var
+
+        // Stores label angles.
+        angle = d3.local(),
+
+        // Stores whether or not labels should be flipped upside-down.
+        flip = d3.local(),
+
+        // Stores whether or not this label is for a chord group
+        // that is either the source or destination of the
+        // selected ribbon.
+        selected = d3.local();
 
     // DOM Elements.
     var svg = d3.select(div).append("svg")
