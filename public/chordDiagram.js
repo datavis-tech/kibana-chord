@@ -139,8 +139,17 @@ define(function(require) {
         chordGroups
           .select("text")
             .each(function(group) {
+
               angle.set(this, (group.startAngle + group.endAngle) / 2);
+
               flip.set(this, angle.get(this) > Math.PI);
+
+              selected.set(this, selectedRibbon &&
+                (
+                  (selectedRibbon.sourceIndex === group.index) ||
+                  (selectedRibbon.targetIndex === group.index)
+                )
+              );
             })
 
         // Add labels
@@ -162,16 +171,7 @@ define(function(require) {
             })
             .style("cursor", "default")
             .style("font-weight", function(group){
-              if(selectedRibbon &&
-                (
-                  (selectedRibbon.sourceIndex === group.index) ||
-                  (selectedRibbon.targetIndex === group.index)
-                )
-              ){
-                return "bold";
-              } else {
-                return "normal";
-              }
+              return selected.get(this) ? "bold" : "normal";
             })
             .call(chordGroupHover);
 
