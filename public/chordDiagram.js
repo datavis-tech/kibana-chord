@@ -60,11 +60,20 @@ define(function(require) {
           .radius(innerRadius),
         chord = d3.chord()
           .padAngle(padAngle),
-        color = d3.scaleOrdinal()
-          .range(d3.schemeCategory20),
+        color = d3.scaleOrdinal(),
         arc = d3.arc()
           .innerRadius(innerRadius)
           .outerRadius(outerRadius);
+
+    // Compute a color scheme from d3.schemeCategory20 such that
+    // distinct dark colors come first, then light colors later.
+    var darkColors = d3.schemeCategory20.filter(function(d, i){
+      return i % 2 - 1;
+    });
+    var lightColors = d3.schemeCategory20.filter(function(d, i){
+      return i % 2;
+    });
+    color.range(darkColors.concat(lightColors));
 
     // Clear the selected ribbon when clicking on
     // any area other than on a ribbon.
@@ -82,6 +91,10 @@ define(function(require) {
         var matrix = generateMatrix(data),
             chords = chord(matrix);
 
+        // Use alphanumerically sorted source and destination names
+        // for the color scale domain for consistent colors across refreshes.
+        color.domain(matrix.names.slice().sort());
+
         // Render the ribbons of the Chord Diagram (the connecting fibers inside the circle).
         var ribbons = ribbonsG
           .selectAll("path")
@@ -90,7 +103,7 @@ define(function(require) {
         ribbons
           .attr("d", ribbon)
           .style("fill", function(d) {
-            return color(d.source.index);
+            return color(matrix.names[d.source.index]);
           })
           .style("stroke", "black")
           .style("stroke-opacity", 0.2)
@@ -142,7 +155,7 @@ define(function(require) {
           .select("path")
             .attr("d", arc)
             .style("fill", function(group) {
-              return color(group.index);
+              return color(matrix.names[group.index]);
             })
             .call(chordGroupHover);
 
