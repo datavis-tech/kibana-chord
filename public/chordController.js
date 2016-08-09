@@ -42,10 +42,6 @@ define(function(require) {
           .style("margin-top", "0.5em"),
         tableBodyContainer = tableContainer.append("div").node();
 
-    // TODO change this.
-    // A placeholder header.
-    tableHeaderContainer.text("Flow between X and Y");
-
     // Construct an instance of the Chord Diagram.
     var chordDiagram = ChordDiagram(chordContainer);
 
@@ -107,6 +103,12 @@ define(function(require) {
 
       if(selectedRibbon){
 
+        // Update the table header.
+        tableHeaderContainer.text(
+          "Flow between " + selectedRibbon.source +
+          " and " + selectedRibbon.destination
+        );
+
         // Extract the time interval from the global timeFilter.
         var timeBounds = $rootScope.timefilter.getBounds();
 
@@ -155,10 +157,15 @@ define(function(require) {
           }, function errorCallback(response){
             throw response;
           });
+
+
+      // If there is no selected ribbon, then
       } else {
 
-        // If there is no selected ribbon,
-        // then any existing table should be cleared.
+        // clear the table header,
+        tableHeaderContainer.text("");
+
+        // clear the existing table.
         table([], []);
 
       }
