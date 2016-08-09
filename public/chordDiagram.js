@@ -129,30 +129,30 @@ define(function(require) {
         // Add labels
         chordGroups
           .select("text")
-            .each(function(d) {
-              angle.set(this, (d.startAngle + d.endAngle) / 2);
+            .each(function(group) {
+              angle.set(this, (group.startAngle + group.endAngle) / 2);
               flip.set(this, angle.get(this) > Math.PI);
             })
-            .attr("transform", function(d) {
+            .attr("transform", function() {
               return [
                 "rotate(" + (angle.get(this) / Math.PI * 180 - 90) + ")",
                 "translate(" + (outerRadius + labelPadding) + ")",
                 flip.get(this) ? "rotate(180)" : ""
               ].join("");
             })
-            .attr("text-anchor", function(d) {
+            .attr("text-anchor", function() {
               return flip.get(this) ? "end" : "start";
             })
             .attr("alignment-baseline", "central")
-            .text(function(d) {
-              return matrix.names[d.index];
+            .text(function(group) {
+              return matrix.names[group.index];
             })
             .style("cursor", "default")
-            .style("font-weight", function(d){
+            .style("font-weight", function(group){
               if(selectedRibbon &&
                 (
-                  (selectedRibbon.sourceIndex === d.index) ||
-                  (selectedRibbon.targetIndex === d.index)
+                  (selectedRibbon.sourceIndex === group.index) ||
+                  (selectedRibbon.targetIndex === group.index)
                 )
               ){
                 return "bold";
