@@ -28,27 +28,25 @@ define(function(require) {
     var div = $element[0];
 
     // Construct a Bootstrap Grid to position the Chord Diagram and Table.
-    var container = d3.select(div)
-            .style("width", "100%")
-          .append("div")
-            .attr("class", "container-fluid")
-          .append("div")
-            .attr("class", "row"),
-        chordContainer = container
-          .append("div")
-            .attr("class", "col-md-6")
-            .node(),
-        tableContainer = container
-          .append("div")
-            .attr("class", "col-md-6")
-            .node();
+    var container = d3.select(div).style("width", "100%")
+          .append("div").attr("class", "container-fluid")
+          .append("div").attr("class", "row"),
+        chordContainer = container.append("div")
+          .attr("class", "col-md-6").node(),
+        tableContainer = container.append("div")
+          .attr("class", "col-md-6");
 
+    // These two divs will go in the column to the right.
+    var tableHeaderContainer = tableContainer.append("div")
+          .style("font-size", "2em")
+          .style("margin-top", "0.5em"),
+        tableBodyContainer = tableContainer.append("div").node();
 
     // Construct an instance of the Chord Diagram.
     var chordDiagram = ChordDiagram(chordContainer);
 
     // Construct an instance of the HTML Table.
-    var table = Table(tableContainer);
+    var table = Table(tableBodyContainer);
 
     // Converts hierarchical result set from ElasticSearch into a tabular form.
     // Returns an array of row objects, similar to the format returned by d3.csv.
@@ -105,6 +103,12 @@ define(function(require) {
 
       if(selectedRibbon){
 
+        // Update the table header.
+        tableHeaderContainer.text(
+          "Flows between " + selectedRibbon.source +
+          " and " + selectedRibbon.destination
+        );
+
         // Extract the time interval from the global timeFilter.
         var timeBounds = $rootScope.timefilter.getBounds();
 
@@ -153,10 +157,15 @@ define(function(require) {
           }, function errorCallback(response){
             throw response;
           });
+
+
+      // If there is no selected ribbon, then
       } else {
 
-        // If there is no selected ribbon,
-        // then any existing table should be cleared.
+        // clear the table header,
+        tableHeaderContainer.text("");
+
+        // clear the existing table.
         table([], []);
 
       }
