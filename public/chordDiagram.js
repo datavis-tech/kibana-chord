@@ -82,6 +82,10 @@ define(function(require) {
         var matrix = generateMatrix(data),
             chords = chord(matrix);
 
+        var sortedNames = matrix.names.slice().sort();
+
+        console.log(sortedNames);
+
         // Render the ribbons of the Chord Diagram (the connecting fibers inside the circle).
         var ribbons = ribbonsG
           .selectAll("path")
