@@ -15,6 +15,7 @@ define(function(require) {
         arcThickness = 20,
         padAngle = 0.07,
         labelPadding = 10,
+        transitionDuration = 500,
 
         // Opacity values common to ribbons and arcs
         // depending on whether or not they are selected.
@@ -187,10 +188,19 @@ define(function(require) {
             .style("fill", function(group) {
               return color(matrix.names[group.index]);
             })
+            .call(chordGroupHover)
+            .call(setArcOpacity);
+
+        function setArcOpacity(selection){
+          selection.transition().duration(transitionDuration)
             .style("opacity", function(group){
-              return selected.get(this.parentNode) ? defaultOpacity : fadedOpacity;
-            })
-            .call(chordGroupHover);
+              if(selectedRibbon){
+                return selected.get(this.parentNode) ? defaultOpacity : fadedOpacity;
+              } else {
+                return defaultOpacity;
+              }
+            });
+        }
 
 
         // Sets up hover interaction to highlight a chord group.
@@ -210,7 +220,7 @@ define(function(require) {
         // Sets the opacity values for all ribbons.
         function setRibbonOpacity(selection){
           selection
-            .transition().duration(500)
+            .transition().duration(transitionDuration)
             .style("opacity", function (d){
 
               // If there is a currently selected ribbon,
