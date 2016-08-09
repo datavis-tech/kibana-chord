@@ -37,10 +37,10 @@ define(function(require) {
           .attr("class", "col-md-6");
 
     // These two divs will go in the column to the right.
-    var tableHeaderContainer = tableContainer
-          .append("div"),
-        tableBodyContainer = tableContainer
-          .append("div").node();
+    var tableHeaderContainer = tableContainer.append("div")
+          .style("font-size", "2em"),
+          .style("margin-top", "0.5em"),
+        tableBodyContainer = tableContainer.append("div").node();
 
     // TODO change this.
     // A placeholder header.
