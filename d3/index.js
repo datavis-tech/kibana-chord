@@ -25,3 +25,7 @@ export {
 export {
   timeFormat
 } from "d3-time-format";
+
+import { default as tip } from "d3-tip";
+
+export { tip };

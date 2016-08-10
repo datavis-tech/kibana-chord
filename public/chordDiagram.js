@@ -4,6 +4,11 @@ define(function(require) {
   // Load D3 v4 via our custom bundle build output.
   var d3 = require("../d3/d3.min");
 
+  // Use the third part module d3-tip for tooltips (MIT Licensed).
+  //var tip = require("d3-tip");
+
+  console.log(d3.tip);
+
   // Constructor function for a Chord Diagram.
   // Accepts a container `div` DOM element.
   return function ChordDiagram(div){
