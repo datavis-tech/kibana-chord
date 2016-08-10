@@ -179,7 +179,8 @@ define(function(require) {
             .style("font-weight", function(group){
               return selected.get(this.parentNode) ? "bold" : "normal";
             })
-            .call(chordGroupHover);
+            .call(chordGroupHover)
+            .call(setChordGroupOpacity);
 
         // Render the chord group arcs.
         chordGroups
@@ -189,9 +190,9 @@ define(function(require) {
               return color(matrix.names[group.index]);
             })
             .call(chordGroupHover)
-            .call(setArcOpacity);
+            .call(setChordGroupOpacity);
 
-        function setArcOpacity(selection){
+        function setChordGroupOpacity(selection){
           selection.transition().duration(transitionDuration)
             .style("opacity", function(group){
               if(selectedRibbon){
