@@ -88,7 +88,8 @@ define(function(require) {
         color = d3.scaleOrdinal(),
         arc = d3.arc()
           .innerRadius(innerRadius)
-          .outerRadius(outerRadius);
+          .outerRadius(outerRadius),
+        valueFormat = d3.format(",");
 
     // Compute a color scheme from d3.schemeCategory20 such that
     // distinct dark colors come first, then light colors later.
@@ -146,9 +147,9 @@ define(function(require) {
             var dest = matrix.names[d.target.index];
             var message = [
               "<strong>" + src +" to " + dest +"</strong>",
-              d.target.value,
+              valueFormat(d.target.value),
               "<br><strong>" + dest +" to " + src +"</strong>",
-              d.source.value
+              valueFormat(d.source.value)
             ].join("<br>");
             
             console.log(message);
