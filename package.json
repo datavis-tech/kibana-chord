@@ -26,6 +26,7 @@
   "homepage": "https://github.com/datavis-tech/kibana-chord#readme",
   "devDependencies": {
     "d3-chord": "^1.0.0",
+    "d3-format": "^1.0.2",
     "d3-scale": "^1.0.1",
     "d3-selection": "^1.0.0",
     "d3-shape": "^1.0.0",

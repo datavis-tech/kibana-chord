@@ -146,6 +146,7 @@ define(function(require) {
             var src = matrix.names[d.source.index];
             var dest = matrix.names[d.target.index];
             var message = [
+              "<h1>Total packets:</h1>",
               "<strong>" + src +" to " + dest +"</strong>",
               valueFormat(d.target.value),
               "<br><strong>" + dest +" to " + src +"</strong>",
