@@ -66,6 +66,10 @@ define(function(require) {
           .attr("class", "popover")
           .style("position", "absolute")
           .style("pointer-events", "none"),
+        tooltipTitle = tooltip.append("h2")
+          .attr("class", "popover-title")
+          .style("font-weight", "bold")
+          .text("Total packets"),
         tooltipContent = tooltip.append("div")
           .attr("class", "popover-content"),
 
@@ -146,14 +150,12 @@ define(function(require) {
             var src = matrix.names[d.source.index];
             var dest = matrix.names[d.target.index];
             var message = [
-              "<h1>Total packets:</h1>",
               "<strong>" + src +" to " + dest +"</strong>",
               valueFormat(d.target.value),
               "<br><strong>" + dest +" to " + src +"</strong>",
               valueFormat(d.source.value)
             ].join("<br>");
             
-            console.log(message);
             var coords = d3.mouse(body.node());
             tooltipContent.node().innerHTML = message;
             tooltip
