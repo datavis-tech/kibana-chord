@@ -297,7 +297,7 @@ define(function(require) {
       data.forEach(function (d){
         i = indices[source(d)];
         j = indices[destination(d)];
-        matrix[i][j] = weight(d);
+        matrix[j][i] = weight(d);
       });
 
       matrix.names = names;
