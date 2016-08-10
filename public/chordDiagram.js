@@ -65,9 +65,10 @@ define(function(require) {
         tooltip = body.append("div")
           .attr("class", "popover")
           .style("position", "absolute")
-          .style("display", "block"),
+          .style("pointer-events", "none"),
         tooltipContent = tooltip.append("div")
           .attr("class", "popover-content"),
+
         g = svg.append("g"),
         backgroundRect = g.append("rect")
           .attr("width", width)
@@ -140,7 +141,7 @@ define(function(require) {
               destination: matrix.names[d.target.index]
             });
           })
-          .on("mouseover", function (d){
+          .on("mousemove", function (d){
             var src = matrix.names[d.source.index];
             var dest = matrix.names[d.target.index];
             var message = [
@@ -152,13 +153,15 @@ define(function(require) {
             
             console.log(message);
             var coords = d3.mouse(body.node());
+            tooltipContent.node().innerHTML = message;
             tooltip
+              .style("display", "block")
               .style("left", coords[0] + "px")
               .style("top", coords[1] + "px");
-            tooltipContent.node().innerHTML = message;
 
           })
           .on("mouseout", function (){
+            tooltip.style("display", "none");
           });
         ribbons.exit().remove();
 
