@@ -34,5 +34,8 @@
     "rollup": "^0.34.1",
     "rollup-plugin-node-resolve": "^1.7.1",
     "uglify-js": "^2.7.0"
+  },
+  "dependencies": {
+    "d3-tip": "^0.6.7"
   }
 }
