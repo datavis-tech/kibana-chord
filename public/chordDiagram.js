@@ -14,10 +14,17 @@ define(function(require) {
         outerPadding = 50,
         arcThickness = 20,
         padAngle = 0.07,
+        labelPadding = 10,
+        transitionDuration = 500,
+
+        // Opacity values common to ribbons and arcs
+        // depending on whether or not they are selected.
+        defaultOpacity = 0.6,
+        fadedOpacity = 0.1,
+
         outerRadius = width / 2 - outerPadding,
         innerRadius = outerRadius - arcThickness,
-        labelPadding = 10,
-        defaultOpacity = 0.6,
+
         selectedRibbon = null,
         hoveredChordGroup = null,
         data = null,
@@ -35,10 +42,19 @@ define(function(require) {
         source = function (d){ return d[chordSourceColumn]; },
         destination = function (d){ return d[chordDestinationColumn]; };
 
-    // D3 Local objects for DOM-local storage of label angles and
-    // whether or not labels should be flipped upside-down.
-    var angle = d3.local(),
-        flip = d3.local();
+    // D3 Local objects for DOM-local storage.
+    var
+
+        // Stores label angles.
+        angle = d3.local(),
+
+        // Stores whether or not labels should be flipped upside-down.
+        flip = d3.local(),
+
+        // Stores whether or not this label is for a chord group
+        // that is either the source or destination of the
+        // selected ribbon.
+        selected = d3.local();
 
     // DOM Elements.
     var svg = d3.select(div).append("svg")
@@ -126,29 +142,45 @@ define(function(require) {
         chordGroups.exit().remove();
         chordGroups = chordGroups.merge(chordGroupsEnter);
 
+        // Compute locals.
+        chordGroups
+          .each(function(group) {
+
+            angle.set(this, (group.startAngle + group.endAngle) / 2);
+
+            flip.set(this, angle.get(this) > Math.PI);
+
+            selected.set(this, selectedRibbon &&
+              (
+                (selectedRibbon.sourceIndex === group.index) ||
+                (selectedRibbon.targetIndex === group.index)
+              )
+            );
+          })
+
         // Add labels
         chordGroups
           .select("text")
-            .each(function(d) {
-              angle.set(this, (d.startAngle + d.endAngle) / 2);
-              flip.set(this, angle.get(this) > Math.PI);
-            })
-            .attr("transform", function(d) {
+            .attr("transform", function() {
               return [
                 "rotate(" + (angle.get(this) / Math.PI * 180 - 90) + ")",
                 "translate(" + (outerRadius + labelPadding) + ")",
                 flip.get(this) ? "rotate(180)" : ""
               ].join("");
             })
-            .attr("text-anchor", function(d) {
+            .attr("text-anchor", function() {
               return flip.get(this) ? "end" : "start";
             })
             .attr("alignment-baseline", "central")
-            .text(function(d) {
-              return matrix.names[d.index];
+            .text(function(group) {
+              return matrix.names[group.index];
             })
             .style("cursor", "default")
-            .call(chordGroupHover);
+            .style("font-weight", function(group){
+              return selected.get(this.parentNode) ? "bold" : "normal";
+            })
+            .call(chordGroupHover)
+            .call(setChordGroupOpacity);
 
         // Render the chord group arcs.
         chordGroups
@@ -157,7 +189,19 @@ define(function(require) {
             .style("fill", function(group) {
               return color(matrix.names[group.index]);
             })
-            .call(chordGroupHover);
+            .call(chordGroupHover)
+            .call(setChordGroupOpacity);
+
+        function setChordGroupOpacity(selection){
+          selection.transition().duration(transitionDuration)
+            .style("opacity", function(group){
+              if(selectedRibbon){
+                return selected.get(this.parentNode) ? defaultOpacity : fadedOpacity;
+              } else {
+                return defaultOpacity;
+              }
+            });
+        }
 
 
         // Sets up hover interaction to highlight a chord group.
@@ -166,18 +210,18 @@ define(function(require) {
           selection
             .on("mouseover", function (group){
               hoveredChordGroup = group;
-              setRibbonOpacity(ribbons);
+              my();
             })
             .on("mouseout", function (){
               hoveredChordGroup = null;
-              setRibbonOpacity(ribbons);
+              my();
             });
         }
 
         // Sets the opacity values for all ribbons.
         function setRibbonOpacity(selection){
           selection
-            .transition().duration(500)
+            .transition().duration(transitionDuration)
             .style("opacity", function (d){
 
               // If there is a currently selected ribbon,
@@ -192,7 +236,7 @@ define(function(require) {
                 } else {
 
                   // and show all others faded out.
-                  return 0.1;
+                  return fadedOpacity;
                 }
               } else {
 
@@ -209,7 +253,7 @@ define(function(require) {
                   } else {
 
                     // and show all others faded out.
-                    return 0.1;
+                    return fadedOpacity;
                   }
                 } else {
 
