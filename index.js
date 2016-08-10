@@ -37,28 +37,30 @@ module.exports = function(kibana) {
               ],
               query: {
                 bool: {
-                  must: [
-                    {
-                      "term": {
-                        "nuage_metadata.sourcepolicygroups": d.source
-                      }
-                    }, 
-                    {
-                      "term": {
-                        "nuage_metadata.destinationpolicygroups": d.destination
-                      }
-                    }, 
-                    {
-                      "range": {
-                        "timestamp": time
-                      }
+                  should: [
+        	  {
+           	    "bool": {
+             	      "must": [
+                        {"term": {"nuage_metadata.sourcepolicygroups": d.source} },
+                        { "term": {"nuage_metadata.destinationpolicygroups": d.destination} },
+                        {"range": { "timestamp": time }}
+                      ]
                     }
-                  ]
+                  },
+                  {
+                    "bool": {
+                      "must": [
+                        { "term": {"nuage_metadata.sourcepolicygroups": d.destination} },
+                        { "term": {"nuage_metadata.destinationpolicygroups": d.source} },
+                        {"range": { "timestamp": time }}
+                      ] 
+                    }
+                  }
+                 ]
                 }
               }
             }
           };
-
           // Execute the query and pass it to the client as JSON.
           server.plugins.elasticsearch
             .callWithRequest(req, "search", options)
