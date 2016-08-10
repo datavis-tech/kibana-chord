@@ -60,6 +60,14 @@ define(function(require) {
     var svg = d3.select(div).append("svg")
           .attr("width", width)
           .attr("height", height),
+          
+        body = d3.select("body"),
+        tooltip = body.append("div")
+          .attr("class", "popover")
+          .style("position", "absolute")
+          .style("display", "block"),
+        tooltipContent = tooltip.append("div")
+          .attr("class", "popover-content"),
         g = svg.append("g"),
         backgroundRect = g.append("rect")
           .attr("width", width)
@@ -131,6 +139,26 @@ define(function(require) {
               source: matrix.names[d.source.index],
               destination: matrix.names[d.target.index]
             });
+          })
+          .on("mouseover", function (d){
+            var src = matrix.names[d.source.index];
+            var dest = matrix.names[d.target.index];
+            var message = [
+              "<strong>" + src +" to " + dest +"</strong>",
+              d.target.value,
+              "<br><strong>" + dest +" to " + src +"</strong>",
+              d.source.value
+            ].join("<br>");
+            
+            console.log(message);
+            var coords = d3.mouse(body.node());
+            tooltip
+              .style("left", coords[0] + "px")
+              .style("top", coords[1] + "px");
+            tooltipContent.node().innerHTML = message;
+
+          })
+          .on("mouseout", function (){
           });
         ribbons.exit().remove();
 
