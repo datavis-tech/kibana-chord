@@ -3,7 +3,8 @@ export {
   selection,
   select,
   selectAll,
-  local
+  local,
+  mouse
 } from "d3-selection";
 
 import "d3-transition";
@@ -25,3 +26,7 @@ export {
 export {
   timeFormat
 } from "d3-time-format";
+
+export {
+  format
+} from "d3-format";

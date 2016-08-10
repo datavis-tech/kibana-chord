@@ -60,6 +60,19 @@ define(function(require) {
     var svg = d3.select(div).append("svg")
           .attr("width", width)
           .attr("height", height),
+          
+        body = d3.select("body"),
+        tooltip = body.append("div")
+          .attr("class", "popover")
+          .style("position", "absolute")
+          .style("pointer-events", "none"),
+        tooltipTitle = tooltip.append("h2")
+          .attr("class", "popover-title")
+          .style("font-weight", "bold")
+          .text("Total packets"),
+        tooltipContent = tooltip.append("div")
+          .attr("class", "popover-content"),
+
         g = svg.append("g"),
         backgroundRect = g.append("rect")
           .attr("width", width)
@@ -79,7 +92,8 @@ define(function(require) {
         color = d3.scaleOrdinal(),
         arc = d3.arc()
           .innerRadius(innerRadius)
-          .outerRadius(outerRadius);
+          .outerRadius(outerRadius),
+        valueFormat = d3.format(",");
 
     // Compute a color scheme from d3.schemeCategory20 such that
     // distinct dark colors come first, then light colors later.
@@ -131,6 +145,27 @@ define(function(require) {
               source: matrix.names[d.source.index],
               destination: matrix.names[d.target.index]
             });
+          })
+          .on("mousemove", function (d){
+            var src = matrix.names[d.source.index];
+            var dest = matrix.names[d.target.index];
+            var message = [
+              "<strong>" + src +" to " + dest +"</strong>",
+              valueFormat(d.target.value),
+              "<br><strong>" + dest +" to " + src +"</strong>",
+              valueFormat(d.source.value)
+            ].join("<br>");
+            
+            var coords = d3.mouse(body.node());
+            tooltipContent.node().innerHTML = message;
+            tooltip
+              .style("display", "block")
+              .style("left", coords[0] + "px")
+              .style("top", coords[1] + "px");
+
+          })
+          .on("mouseout", function (){
+            tooltip.style("display", "none");
           });
         ribbons.exit().remove();
 
