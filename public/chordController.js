@@ -129,6 +129,8 @@ define(function(require) {
           .post("/api/kibana-chord", options)
           .then(function successCallback(response){
 
+            console.log(response._scroll_id);
+
             // Transform the response data into a form the table can use.
             var data = response.data.hits.hits.map(function (d){
               d = d._source;
