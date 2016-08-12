@@ -34,19 +34,13 @@ define(function(require) {
         chordContainer = container.append("div")
           .attr("class", "col-md-6").node(),
         tableContainer = container.append("div")
-          .attr("class", "col-md-6");
-
-    // These two divs will go in the column to the right.
-    var tableHeaderContainer = tableContainer.append("div")
-          .style("font-size", "2em")
-          .style("margin-top", "0.5em"),
-        tableBodyContainer = tableContainer.append("div").node();
+          .attr("class", "col-md-6").node();
 
     // Construct an instance of the Chord Diagram.
     var chordDiagram = ChordDiagram(chordContainer);
 
     // Construct an instance of the HTML Table.
-    var table = Table(tableBodyContainer);
+    var table = Table(tableContainer);
 
     // Converts hierarchical result set from ElasticSearch into a tabular form.
     // Returns an array of row objects, similar to the format returned by d3.csv.
@@ -103,8 +97,7 @@ define(function(require) {
 
       if(selectedRibbon){
 
-        // Update the table header.
-        tableHeaderContainer.text(
+        var tableTitle = (
           "Flows between " + selectedRibbon.source +
           " and " + selectedRibbon.destination
         );
@@ -154,7 +147,7 @@ define(function(require) {
               { title: "Type", property: "type" },
               { title: "Timestamp", property: "timestamp" },
               { title: "Packets", property: "packets" }
-            ]);
+            ], tableTitle);
 
           }, function errorCallback(response){
             throw response;
