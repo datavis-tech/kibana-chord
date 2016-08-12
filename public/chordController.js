@@ -139,7 +139,7 @@ define(function(require) {
             });
 
             // Render the HTML Table.
-            table(data, [
+            var columns = [
               { title: "Source IP", property: "sourceip" },
               { title: "Dest IP", property: "destinationip" },
               { title: "Source PG", property: "source" },
@@ -147,7 +147,12 @@ define(function(require) {
               { title: "Type", property: "type" },
               { title: "Timestamp", property: "timestamp" },
               { title: "Packets", property: "packets" }
-            ], tableTitle);
+            ];
+            table
+              .data(data)
+              .columns(columns)
+              .title(tableTitle)
+              ();
 
           }, function errorCallback(response){
             throw response;
@@ -158,7 +163,11 @@ define(function(require) {
       } else {
 
         // clear the existing table.
-        table([], [], "");
+        table
+          .data([])
+          .columns([])
+          .title("")
+          ();
 
       }
     }

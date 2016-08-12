@@ -26,14 +26,22 @@ define(function(require) {
         tableBody = tableRoot
           .append("tbody");
 
-    // Renders the HTML table with the given data array.
-    // Arguments:
-    //
-    //  * data - An array of row objects.
-    //  * columns - An array of column descriptor objects with properties:
-    //    * title - The title of the column to display in the header.
-    //    * property - The name of the column property in row objects.
-    function render(data, columns, title){
+    // Internal variables
+    var
+    
+        // An array of row objects.
+        data,
+        
+        // An array of column descriptor objects with properties:
+        //  * title - The title of the column to display in the header.
+        //  * property - The name of the column property in row objects.
+        columns,
+        
+        // The human-readable title for the top of the table.
+        title;
+
+    // Renders the table.
+    function my(){
 
       // Set the title.
       tableTitleContainer.text(title);
@@ -60,6 +68,36 @@ define(function(require) {
       td.text( function (d) { return d; });
     }
 
-    return render;
+    my.data = function (_){
+      //return _ ? data = _, my : data;
+      if(_){
+        data = _;
+        return my;
+      } else {
+        return data;
+      }
+    };
+
+    my.columns = function (_){
+      //return _ ? columns = _, my : columns;
+      if(_){
+        columns = _;
+        return my;
+      } else {
+        return columns;
+      }
+    };
+
+    my.title = function (_){
+      //return _ ? title = _, my : title;
+      if(arguments.length){
+        title = _;
+        return my;
+      } else {
+        return title;
+      }
+    };
+
+    return my;
   }
 });
