@@ -158,6 +158,7 @@ define(function(require) {
               .columns(columns)
               .title(tableTitle)
               ();
+            moreButton.style("display", "normal");
 
           }, function errorCallback(response){
             throw response;
@@ -173,6 +174,7 @@ define(function(require) {
           .columns([])
           .title("")
           ();
+        moreButton.style("display", "none");
 
       }
     }
