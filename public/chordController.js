@@ -157,11 +157,8 @@ define(function(require) {
       // If there is no selected ribbon, then
       } else {
 
-        // clear the table header,
-        tableHeaderContainer.text("");
-
         // clear the existing table.
-        table([], []);
+        table([], [], "");
 
       }
     }
