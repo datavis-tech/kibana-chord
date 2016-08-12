@@ -36,8 +36,10 @@ define(function(require) {
         rightPanel = container.append("div")
           .attr("class", "col-md-6"),
         tableContainer = rightPanel.append("div"),
-        moreButton = rightPanel.append("button")
-          .text("More");
+        moreButton = rightPanel.append("div")
+            .style("text-align", "center")
+          .append("button")
+            .text("More");
 
     // Construct an instance of the Chord Diagram.
     var chordDiagram = ChordDiagram(chordContainer.node());
