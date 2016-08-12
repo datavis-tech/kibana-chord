@@ -11,6 +11,8 @@ module.exports = function(kibana) {
     // Define our custom server-side middleware for
     // custom ElasticSearch queries.
     init: function (server, options) {
+
+      // This route is for the initial search query.
       server.route({
         path: "/api/kibana-chord",
         method: "POST",
@@ -68,6 +70,15 @@ module.exports = function(kibana) {
             .then(function (response) {
               reply(JSON.stringify(response, null, 2));
             });
+        }
+      });
+
+      // This route is for scrolling through results.
+      server.route({
+        path: "/api/kibana-chord-scroll",
+        method: "POST",
+        handler: function(req, reply) {
+          console.log("Inside Scroll Handler");
         }
       });
     }
