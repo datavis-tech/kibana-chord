@@ -68,29 +68,10 @@ define(function(require) {
       td.text( function (d) { return d; });
     }
 
-    my.data = function (_){
-      //return _ ? data = _, my : data;
-      if(_){
-        data = _;
-        return my;
-      } else {
-        return data;
-      }
-    };
-
-    my.columns = function (_){
-      //return _ ? columns = _, my : columns;
-      if(_){
-        columns = _;
-        return my;
-      } else {
-        return columns;
-      }
-    };
-
-    my.title = function (_){
-      return arguments.length ? (title = _, my) : title;
-    };
+    // Accessors.
+    my.data = function (_){ return arguments.length ? (data = _, my) : data; };
+    my.columns = function (_){ return arguments.length ? (columns = _, my) : columns; };
+    my.title = function (_){ return arguments.length ? (title = _, my) : title; };
 
     return my;
   }
