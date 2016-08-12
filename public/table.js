@@ -89,13 +89,7 @@ define(function(require) {
     };
 
     my.title = function (_){
-      //return _ ? title = _, my : title;
-      if(arguments.length){
-        title = _;
-        return my;
-      } else {
-        return title;
-      }
+      return arguments.length ? (title = _, my) : title;
     };
 
     return my;
