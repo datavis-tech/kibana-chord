@@ -39,7 +39,8 @@ define(function(require) {
         moreButton = rightPanel.append("div")
             .style("text-align", "center")
           .append("button")
-            .text("More");
+            .text("More")
+            .style("display", "none");
 
     // Construct an instance of the Chord Diagram.
     var chordDiagram = ChordDiagram(chordContainer.node());
@@ -127,8 +128,6 @@ define(function(require) {
           .post("/api/kibana-chord", options)
           .then(function successCallback(response){
 
-            console.log(response._scroll_id);
-
             // Transform the response data into a form the table can use.
             var data = response.data.hits.hits.map(function (d){
               d = d._source;
@@ -153,12 +152,18 @@ define(function(require) {
               { title: "Timestamp", property: "timestamp" },
               { title: "Packets", property: "packets" }
             ];
+
             table
               .data(data)
               .columns(columns)
               .title(tableTitle)
               ();
-            moreButton.style("display", "normal");
+
+            moreButton.style("display", "inline-block");
+
+            moreButton.on("click", function (){
+              console.log(response.data._scroll_id);
+            });
 
           }, function errorCallback(response){
             throw response;
