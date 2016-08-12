@@ -32,15 +32,18 @@ define(function(require) {
           .append("div").attr("class", "container-fluid")
           .append("div").attr("class", "row"),
         chordContainer = container.append("div")
-          .attr("class", "col-md-6").node(),
-        tableContainer = container.append("div")
-          .attr("class", "col-md-6").node();
+          .attr("class", "col-md-6"),
+        rightPanel = container.append("div")
+          .attr("class", "col-md-6"),
+        tableContainer = rightPanel.append("div"),
+        moreButton = rightPanel.append("button")
+          .text("More");
 
     // Construct an instance of the Chord Diagram.
-    var chordDiagram = ChordDiagram(chordContainer);
+    var chordDiagram = ChordDiagram(chordContainer.node());
 
     // Construct an instance of the HTML Table.
-    var table = Table(tableContainer);
+    var table = Table(tableContainer.node());
 
     // Converts hierarchical result set from ElasticSearch into a tabular form.
     // Returns an array of row objects, similar to the format returned by d3.csv.
