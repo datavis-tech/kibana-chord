@@ -31,6 +31,7 @@ module.exports = function(kibana) {
           // TODO include sourceField, destField from client Schema config
           var options = {
             index: index,
+            scroll: "30s",
             body: {
               sort: [
                 { "timestamp": { "order": "desc" } }
