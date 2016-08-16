@@ -127,20 +127,7 @@ define(function(require) {
         $http
           .post("/api/kibana-chord", options)
           .then(function successCallback(response){
-
-            // Transform the response data into a form the table can use.
-            var data = response.data.hits.hits.map(function (d){
-              d = d._source;
-
-              // Format timestamp as human-readable date.
-              d.timestamp = formatTime(new Date(d.timestamp));
-
-              // Add source and dest attribute to be used in table
-              d.source = d.nuage_metadata.sourcepolicygroups;
-              d.dest = d.nuage_metadata.destinationpolicygroups;
-
-              return d;
-            });
+            var data = parseResponseHits(response);
 
             // Render the HTML Table.
             var columns = [
@@ -198,4 +185,21 @@ define(function(require) {
     // when the user clicks on the ribbon.
     chordDiagram.onSelectedRibbonChange(updateTable);
   });
+
+  function parseResponseHits(response){
+
+    // Transform the response data into a form the table can use.
+    return response.data.hits.hits.map(function (d){
+      d = d._source;
+
+      // Format timestamp as human-readable date.
+      d.timestamp = formatTime(new Date(d.timestamp));
+
+      // Add source and dest attribute to be used in table
+      d.source = d.nuage_metadata.sourcepolicygroups;
+      d.dest = d.nuage_metadata.destinationpolicygroups;
+
+      return d;
+    });
+  }
 });
