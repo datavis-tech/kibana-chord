@@ -82,9 +82,9 @@ module.exports = function(kibana) {
           console.log("Inside Scroll Handler");
 
           // The payload will have
-          // * d.scrollId - The scroll key/cursor for fetching more data.
-          // * d.scroll - The scroll consistency time.
-          var d = req.payload;
+          // * scrollId - The scroll key/cursor for fetching more data.
+          // * scroll - The scroll consistency time.
+          var options = req.payload;
 
           // Execute the query and pass it to the client as JSON.
           server.plugins.elasticsearch

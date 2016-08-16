@@ -162,7 +162,17 @@ define(function(require) {
             moreButton.style("display", "inline-block");
 
             moreButton.on("click", function (){
-              console.log(response.data._scroll_id);
+              var options = {
+                scrollId: response.data._scroll_id,
+                scroll: "30s"
+              };
+
+              // Invoke the scroll middleware, then append it into the table.
+              $http
+                .post("/api/kibana-chord-scroll", options)
+                .then(function successCallback(response){
+                  console.log(response);
+                });
             });
 
           }, function errorCallback(response){
