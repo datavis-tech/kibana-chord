@@ -32,21 +32,21 @@ define(function(require) {
           .append("div").attr("class", "container-fluid")
           .append("div").attr("class", "row"),
         chordContainer = container.append("div")
-          .attr("class", "col-md-6").node(),
-        tableContainer = container.append("div")
-          .attr("class", "col-md-6");
-
-    // These two divs will go in the column to the right.
-    var tableHeaderContainer = tableContainer.append("div")
-          .style("font-size", "2em")
-          .style("margin-top", "0.5em"),
-        tableBodyContainer = tableContainer.append("div").node();
+          .attr("class", "col-md-6"),
+        rightPanel = container.append("div")
+          .attr("class", "col-md-6"),
+        tableContainer = rightPanel.append("div"),
+        moreButton = rightPanel.append("div")
+            .style("text-align", "center")
+          .append("button")
+            .text("More")
+            .style("display", "none");
 
     // Construct an instance of the Chord Diagram.
-    var chordDiagram = ChordDiagram(chordContainer);
+    var chordDiagram = ChordDiagram(chordContainer.node());
 
     // Construct an instance of the HTML Table.
-    var table = Table(tableBodyContainer);
+    var table = Table(tableContainer.node());
 
     // Converts hierarchical result set from ElasticSearch into a tabular form.
     // Returns an array of row objects, similar to the format returned by d3.csv.
@@ -103,8 +103,7 @@ define(function(require) {
 
       if(selectedRibbon){
 
-        // Update the table header.
-        tableHeaderContainer.text(
+        var tableTitle = (
           "Flows between " + selectedRibbon.source +
           " and " + selectedRibbon.destination
         );
@@ -128,23 +127,10 @@ define(function(require) {
         $http
           .post("/api/kibana-chord", options)
           .then(function successCallback(response){
-
-            // Transform the response data into a form the table can use.
-            var data = response.data.hits.hits.map(function (d){
-              d = d._source;
-
-              // Format timestamp as human-readable date.
-              d.timestamp = formatTime(new Date(d.timestamp));
-
-              // Add source and dest attribute to be used in table
-              d.source = d.nuage_metadata.sourcepolicygroups;
-              d.dest = d.nuage_metadata.destinationpolicygroups;
-
-              return d;
-            });
+            var data = parseResponseHits(response);
 
             // Render the HTML Table.
-            table(data, [
+            var columns = [
               { title: "Source IP", property: "sourceip" },
               { title: "Dest IP", property: "destinationip" },
               { title: "Source PG", property: "source" },
@@ -152,7 +138,36 @@ define(function(require) {
               { title: "Type", property: "type" },
               { title: "Timestamp", property: "timestamp" },
               { title: "Packets", property: "packets" }
-            ]);
+            ];
+
+            table
+              .data(data)
+              .columns(columns)
+              .title(tableTitle)
+              ();
+
+            moreButton.style("display", "inline-block");
+
+            moreButton.on("click", function (){
+              var options = {
+                scrollId: response.data._scroll_id,
+                scroll: "30s"
+              };
+
+              // Invoke the scroll middleware, then append it into the table.
+              $http
+                .post("/api/kibana-chord-scroll", options)
+                .then(function successCallback(scrollResponse){
+                  var newData = parseResponseHits(scrollResponse);
+                  var oldData = table.data();
+                  var data = oldData.concat(newData);
+                  table.data(data);
+                  table();
+
+                  // Record the new scroll ID for next time around.
+                  response.data._scroll_id = scrollResponse.data._scroll_id;
+                });
+            });
 
           }, function errorCallback(response){
             throw response;
@@ -162,11 +177,13 @@ define(function(require) {
       // If there is no selected ribbon, then
       } else {
 
-        // clear the table header,
-        tableHeaderContainer.text("");
-
         // clear the existing table.
-        table([], []);
+        table
+          .data([])
+          .columns([])
+          .title("")
+          ();
+        moreButton.style("display", "none");
 
       }
     }
@@ -175,4 +192,21 @@ define(function(require) {
     // when the user clicks on the ribbon.
     chordDiagram.onSelectedRibbonChange(updateTable);
   });
+
+  function parseResponseHits(response){
+
+    // Transform the response data into a form the table can use.
+    return response.data.hits.hits.map(function (d){
+      d = d._source;
+
+      // Format timestamp as human-readable date.
+      d.timestamp = formatTime(new Date(d.timestamp));
+
+      // Add source and dest attribute to be used in table
+      d.source = d.nuage_metadata.sourcepolicygroups;
+      d.dest = d.nuage_metadata.destinationpolicygroups;
+
+      return d;
+    });
+  }
 });

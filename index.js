@@ -11,6 +11,8 @@ module.exports = function(kibana) {
     // Define our custom server-side middleware for
     // custom ElasticSearch queries.
     init: function (server, options) {
+
+      // This route is for the initial search query.
       server.route({
         path: "/api/kibana-chord",
         method: "POST",
@@ -31,6 +33,7 @@ module.exports = function(kibana) {
           // TODO include sourceField, destField from client Schema config
           var options = {
             index: index,
+            scroll: "30s",
             body: {
               sort: [
                 { "timestamp": { "order": "desc" } }
@@ -61,9 +64,31 @@ module.exports = function(kibana) {
               }
             }
           };
+
           // Execute the query and pass it to the client as JSON.
           server.plugins.elasticsearch
             .callWithRequest(req, "search", options)
+            .then(function (response) {
+              reply(JSON.stringify(response, null, 2));
+            });
+        }
+      });
+
+      // This route is for scrolling through results.
+      server.route({
+        path: "/api/kibana-chord-scroll",
+        method: "POST",
+        handler: function(req, reply) {
+          console.log("Inside Scroll Handler");
+
+          // The payload will have
+          // * scrollId - The scroll key/cursor for fetching more data.
+          // * scroll - The scroll consistency time.
+          var options = req.payload;
+
+          // Execute the query and pass it to the client as JSON.
+          server.plugins.elasticsearch
+            .callWithRequest(req, "scroll", options)
             .then(function (response) {
               reply(JSON.stringify(response, null, 2));
             });

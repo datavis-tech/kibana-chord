@@ -12,7 +12,11 @@ define(function(require) {
   return function Table(div){
 
     // DOM Elements.
-    var tableRoot = d3.select(div)
+    var tableContainer = d3.select(div),
+        tableTitleContainer = tableContainer.append("div")
+          .style("font-size", "2em")
+          .style("margin-top", "0.5em"),
+        tableRoot = tableContainer
           .append("table")
             .attr("class", "table table-bordered"),
         tableHeader = tableRoot
@@ -22,15 +26,26 @@ define(function(require) {
         tableBody = tableRoot
           .append("tbody");
 
-    // Renders the HTML table with the given data array.
-    // Arguments:
-    //
-    //  * data - An array of row objects.
-    //  * columns - An array of column descriptor objects with properties:
-    //    * title - The title of the column to display in the header.
-    //    * property - The name of the column property in row objects.
-    function render(data, columns){
-      
+    // Internal variables
+    var
+    
+        // An array of row objects.
+        data,
+        
+        // An array of column descriptor objects with properties:
+        //  * title - The title of the column to display in the header.
+        //  * property - The name of the column property in row objects.
+        columns,
+        
+        // The human-readable title for the top of the table.
+        title;
+
+    // Renders the table.
+    function my(){
+
+      // Set the title.
+      tableTitleContainer.text(title);
+
       // Populate the table header.
       var titles = tableHeader.selectAll("th").data(columns);
       titles.exit().remove();
@@ -53,6 +68,11 @@ define(function(require) {
       td.text( function (d) { return d; });
     }
 
-    return render;
+    // Accessors.
+    my.data = function (_){ return arguments.length ? (data = _, my) : data; };
+    my.columns = function (_){ return arguments.length ? (columns = _, my) : columns; };
+    my.title = function (_){ return arguments.length ? (title = _, my) : title; };
+
+    return my;
   }
 });
