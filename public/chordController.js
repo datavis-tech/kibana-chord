@@ -158,7 +158,11 @@ define(function(require) {
               $http
                 .post("/api/kibana-chord-scroll", options)
                 .then(function successCallback(response){
-                  console.log(response);
+                  var newData = parseResponseHits(response);
+                  var oldData = table.data();
+                  var data = oldData.concat(newData);
+                  table.data(data);
+                  table();
                 });
             });
 
