@@ -64,6 +64,7 @@ module.exports = function(kibana) {
               }
             }
           };
+
           // Execute the query and pass it to the client as JSON.
           server.plugins.elasticsearch
             .callWithRequest(req, "search", options)
@@ -79,6 +80,18 @@ module.exports = function(kibana) {
         method: "POST",
         handler: function(req, reply) {
           console.log("Inside Scroll Handler");
+
+          // The payload will have
+          // * d.scrollId - The scroll key/cursor for fetching more data.
+          // * d.scroll - The scroll consistency time.
+          var d = req.payload;
+
+          // Execute the query and pass it to the client as JSON.
+          server.plugins.elasticsearch
+            .callWithRequest(req, "scroll", options)
+            .then(function (response) {
+              reply(JSON.stringify(response, null, 2));
+            });
         }
       });
     }
