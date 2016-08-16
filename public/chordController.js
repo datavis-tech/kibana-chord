@@ -157,12 +157,15 @@ define(function(require) {
               // Invoke the scroll middleware, then append it into the table.
               $http
                 .post("/api/kibana-chord-scroll", options)
-                .then(function successCallback(response){
-                  var newData = parseResponseHits(response);
+                .then(function successCallback(scrollResponse){
+                  var newData = parseResponseHits(scrollResponse);
                   var oldData = table.data();
                   var data = oldData.concat(newData);
                   table.data(data);
                   table();
+
+                  // Record the new scroll ID for next time around.
+                  response.data._scroll_id = scrollResponse.data._scroll_id;
                 });
             });
 
